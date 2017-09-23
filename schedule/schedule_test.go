@@ -12,7 +12,7 @@ func TestFIFOSchedule(t *testing.T) {
 
 	next := 0
 	jobCreator := func(i int) schedule.Job {
-		return func(ctx context.Context)  {
+		return func(ctx context.Context) {
 			if next != i {
 				t.Fatalf("job#%d (Actual: %d, Expected: %d)", i, next, i)
 			}
@@ -41,7 +41,7 @@ func BenchmarkFIFOSchedule(b *testing.B) {
 		s := schedule.NewFIFOScheduler()
 
 		jobCreator := func() schedule.Job {
-			return func(ctx context.Context) {  }
+			return func(ctx context.Context) {}
 		}
 
 		var jobs []schedule.Job
