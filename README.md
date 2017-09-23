@@ -1,9 +1,11 @@
+# toolkit
+
 [![Build Status](https://travis-ci.org/donutloop/toolkit.svg?branch=master)](https://travis-ci.org/donutloop/toolkit)
 [![Go Report Card](https://goreportcard.com/badge/github.com/donutloop/toolkit)](https://goreportcard.com/report/github.com/donutloop/toolkit)
 
-# toolkit
+## Introduction
 
-Common libraries for writing go applications.
+These patterns can you use to solve common problems when designing an application or system.
 
 ## Requirements
 
