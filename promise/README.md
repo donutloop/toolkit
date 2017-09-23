@@ -21,7 +21,7 @@ func main() {
 	select {
 	case <-done:
 	case err := <-errc:
-		if err == nil {
+		if err != nil {
 			log.Fatal(err)
 		}
 	}
