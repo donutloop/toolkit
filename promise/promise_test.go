@@ -53,7 +53,6 @@ func TestDoFail(t *testing.T) {
 	}
 }
 
-
 func TestDo(t *testing.T) {
 
 	done, errc := promise.Do(context.Background(), func(ctx context.Context) error {
@@ -66,6 +65,21 @@ func TestDo(t *testing.T) {
 	case err := <-errc:
 		if err != nil {
 			t.Fatalf("Unexpected error (%v)", err)
+		}
+	}
+}
+
+func BenchmarkDo(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+
+		done, errc := promise.Do(context.Background(), func(ctx context.Context) error { return nil })
+
+		select {
+		case <-done:
+		case err := <-errc:
+			if err != nil {
+				b.Fatalf("Unexpected error (%v)", err)
+			}
 		}
 	}
 }
