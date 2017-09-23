@@ -6,17 +6,17 @@ package promise_test
 
 import (
 	"context"
+	"fmt"
 	"github.com/donutloop/toolkit/promise"
 	"strings"
 	"testing"
-	"fmt"
 	"time"
 )
 
 func TestDoPanic(t *testing.T) {
 
 	done, errc := promise.Do(context.Background(), func(ctx context.Context) error {
-		panic("check isolation of process")
+		panic("check isolation of goroutine")
 		return nil
 	})
 
@@ -56,7 +56,7 @@ func TestDoFail(t *testing.T) {
 func TestDo(t *testing.T) {
 
 	done, errc := promise.Do(context.Background(), func(ctx context.Context) error {
-		<- time.After(1 * time.Second)
+		<-time.After(1 * time.Second)
 		return nil
 	})
 
@@ -83,5 +83,3 @@ func BenchmarkDo(b *testing.B) {
 		}
 	}
 }
-
-
