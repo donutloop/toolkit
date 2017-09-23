@@ -1,6 +1,16 @@
 # toolkit
-Collection of useful patterns
 
+Common libraries for writing go applications.
+
+## Requirements
+
+Go 1.7+
+
+## Installation
+
+```sh
+go get github.com/donutloop/toolkit
+```
 
 ## Contribution
 
@@ -21,6 +31,9 @@ Please make sure your contributions adhere to our coding guidelines:
  * Commit messages should be prefixed with the sub package(s) they modify.
    * E.g. "schedule: make scheduling faster"
 
+## Code of Conduct
+
+Please read and follow our [Code of Conduct](https://github.com/donutloop/toolkit/blob/master/CODE_OF_CONDUCT.md).
 
 ## Copyright
 
