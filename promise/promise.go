@@ -28,6 +28,5 @@ func Do(ctx context.Context, f func(ctx context.Context) error) (<-chan struct{}
 		done <- struct{}{}
 	}(done, errc, ctx)
 
-
 	return done, errc
 }
