@@ -5,26 +5,26 @@
 package loop
 
 import (
-	"time"
 	"fmt"
+	"time"
 )
 
 func NewLooper(rate time.Duration, event func() error) *looper {
 	l := &looper{
-		event: event,
+		event:    event,
 		rate:     rate,
 		shutdown: make(chan struct{}),
-		err: make(chan error),
+		err:      make(chan error),
 	}
 	go l.doLoop()
 	return l
 }
 
 type looper struct {
-	event func() error
-	rate time.Duration
+	event    func() error
+	rate     time.Duration
 	shutdown chan struct{}
-	err chan error
+	err      chan error
 }
 
 func (l *looper) Stop() {
@@ -32,7 +32,7 @@ func (l *looper) Stop() {
 	close(l.err)
 }
 
-func (l *looper) Error() <- chan error {
+func (l *looper) Error() <-chan error {
 	return l.err
 }
 
@@ -57,4 +57,3 @@ func (l *looper) doLoop() {
 		}
 	}
 }
-

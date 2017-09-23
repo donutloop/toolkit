@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/donutloop/toolkit.svg?branch=master)](https://travis-ci.org/donutloop/toolkit)
+[![Go Report Card](https://goreportcard.com/badge/github.com/donutloop/toolkit)](https://goreportcard.com/report/github.com/donutloop/toolkit)
+
 # toolkit
 
 Common libraries for writing go applications.

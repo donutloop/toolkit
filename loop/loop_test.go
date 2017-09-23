@@ -5,11 +5,11 @@
 package loop_test
 
 import (
-	"testing"
-	"github.com/donutloop/toolkit/loop"
-	"time"
-	"fmt"
 	"errors"
+	"fmt"
+	"github.com/donutloop/toolkit/loop"
+	"testing"
+	"time"
 )
 
 func TestLoop(t *testing.T) {
@@ -19,7 +19,7 @@ func TestLoop(t *testing.T) {
 		return nil
 	})
 
-	<- time.After(10*time.Millisecond)
+	<-time.After(10 * time.Millisecond)
 	l.Stop()
 
 	expectedValue := 9
@@ -34,8 +34,7 @@ func TestLoopFail(t *testing.T) {
 		return nil
 	})
 
-
-	err := <- l.Error()
+	err := <-l.Error()
 	if err.Error() != "event is panicked (check isolation of goroutine)" {
 		t.Fatal(err)
 	}
@@ -44,7 +43,7 @@ func TestLoopFail(t *testing.T) {
 		return errors.New("stub error")
 	})
 
-	err = <- l.Error()
+	err = <-l.Error()
 	if err.Error() != "stub error" {
 		t.Fatal(err)
 	}
@@ -52,6 +51,6 @@ func TestLoopFail(t *testing.T) {
 
 func BenchmarkLoop(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		loop.NewLooper(1*time.Millisecond, func() error {return nil})
+		loop.NewLooper(1*time.Millisecond, func() error { return nil })
 	}
 }
