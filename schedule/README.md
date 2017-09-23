@@ -2,6 +2,8 @@
 
 FIFO scheduler: schedule jobs that will be ran in FIFO order sequentially.
 
+![alt text](FIFO.png)
+
 ## Example 
 ```go 
 package main 

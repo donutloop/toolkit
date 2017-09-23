@@ -12,6 +12,10 @@ Go 1.7+
 go get github.com/donutloop/toolkit
 ```
 
+## Examples 
+
+In each sub directory is a set of examples 
+
 ## Contribution
 
 Thank you for considering to help out with the source code! We welcome contributions from
