@@ -22,9 +22,8 @@ func TestLoop(t *testing.T) {
 	<-time.After(10 * time.Millisecond)
 	l.Stop()
 
-	expectedValue := 9
-	if !(counter >= 9) {
-		t.Fatalf(`unexpected counter value (actual: "%d", expected: "%d")`, counter, expectedValue)
+	if !(counter > 0) {
+		t.Fatalf(`unexpected counter value (actual: "%d", expected: "counter > 0")`, counter)
 	}
 }
 

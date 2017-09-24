@@ -24,11 +24,11 @@ func TestDoPanic(t *testing.T) {
 	case <-done:
 	case err := <-errc:
 		if err == nil {
-			t.Fatal("Unexpected nil error")
+			t.Fatal("unexpected nil error")
 		}
 
 		if !strings.Contains(err.Error(), "promise is panicked") {
-			t.Fatalf(`Unexpected error message (Actual: %s, Expected: promise is panicked (*))`, err.Error())
+			t.Fatalf(`unexpected error message (actual: "%s", expected: "promise is panicked (*)")`, err.Error())
 		}
 	}
 }
@@ -43,12 +43,12 @@ func TestDoFail(t *testing.T) {
 	case <-done:
 	case err := <-errc:
 		if err == nil {
-			t.Fatal("Unexpected nil error")
+			t.Fatal("unexpected nil error")
 		}
 
 		expectedMessage := "stub"
 		if err.Error() != expectedMessage {
-			t.Fatalf(`Unexpected error message (Actual: %s, Expected: %s)`, err.Error(), expectedMessage)
+			t.Fatalf(`unexpected error message (actual: "%s", expected: "%s")`, err.Error(), expectedMessage)
 		}
 	}
 }
@@ -64,7 +64,7 @@ func TestDo(t *testing.T) {
 	case <-done:
 	case err := <-errc:
 		if err != nil {
-			t.Fatalf("Unexpected error (%v)", err)
+			t.Fatalf("unexpected error (%v)", err)
 		}
 	}
 }
@@ -78,7 +78,7 @@ func BenchmarkDo(b *testing.B) {
 		case <-done:
 		case err := <-errc:
 			if err != nil {
-				b.Fatalf("Unexpected error (%v)", err)
+				b.Fatalf("unexpected error (%v)", err)
 			}
 		}
 	}
