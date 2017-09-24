@@ -1,6 +1,7 @@
 # toolkit
 
 [![Build Status](https://travis-ci.org/donutloop/toolkit.svg?branch=master)](https://travis-ci.org/donutloop/toolkit)
+[![Coverage Status](https://coveralls.io/repos/github/donutloop/toolkit/badge.svg)](https://coveralls.io/github/donutloop/toolkit)
 [![Go Report Card](https://goreportcard.com/badge/github.com/donutloop/toolkit)](https://goreportcard.com/report/github.com/donutloop/toolkit)
 
 ## Introduction
