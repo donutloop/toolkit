@@ -30,7 +30,6 @@ func TestLoop(t *testing.T) {
 func TestLoopFail(t *testing.T) {
 	l := loop.NewLooper(1*time.Millisecond, func() error {
 		panic(fmt.Errorf("check isolation of goroutine"))
-		return nil
 	})
 
 	err := <-l.Error()

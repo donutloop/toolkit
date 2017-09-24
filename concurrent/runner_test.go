@@ -41,7 +41,6 @@ func TestRunFail(t *testing.T) {
 		},
 		func() error {
 			panic("check isolation of goroutine")
-			return nil
 		},
 		func() error {
 			atomic.AddInt32(&counter, 3)
@@ -68,7 +67,6 @@ func BenchmarkRun(b *testing.B) {
 			},
 			func() error {
 				panic("check isolation of goroutine")
-				return nil
 			},
 			func() error {
 				return nil

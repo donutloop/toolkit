@@ -17,7 +17,6 @@ func TestDoPanic(t *testing.T) {
 
 	done, errc := promise.Do(context.Background(), func(ctx context.Context) error {
 		panic("check isolation of goroutine")
-		return nil
 	})
 
 	select {

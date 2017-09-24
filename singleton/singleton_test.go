@@ -20,7 +20,7 @@ func TestNewSingleton(t *testing.T) {
 	expectedValue := 1
 
 	if object.(int) != expectedValue {
-		t.Fatalf(`unexpected error message (actual: %s, expected: %s)`, err.Error(), expectedValue)
+		t.Fatalf(`unexpected error message (actual: "%d", expected: "%d")`, object.(int), expectedValue)
 	}
 
 	object, err = stubSingleton.Get()
@@ -29,7 +29,7 @@ func TestNewSingleton(t *testing.T) {
 	}
 
 	if object.(int) != expectedValue {
-		t.Fatalf(`unexpected error message (actual: %s, expected: %s)`, err.Error(), expectedValue)
+		t.Fatalf(`unexpected error message (actual: "%d", expected: "%d")`, object.(int), expectedValue)
 	}
 }
 
