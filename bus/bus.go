@@ -84,7 +84,7 @@ func (b *InProcBus) AddHandler(handler HandlerFunc) error {
 	validateHandlerFunc(handlerType)
 
 	typeOfMsg := handlerType.In(0)
-	if _, ok := b.handlers[typeOfMsg.String()]; !ok {
+	if _, ok := b.handlers[typeOfMsg.String()]; ok {
 		return fmt.Errorf("handler exists for %s", typeOfMsg)
 	}
 
