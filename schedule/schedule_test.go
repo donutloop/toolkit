@@ -36,7 +36,7 @@ func TestFIFOSchedule(t *testing.T) {
 	s.WaitFinish(100)
 	expectedJobCount := 100
 	if s.Scheduled() != expectedJobCount {
-		t.Fatalf("scheduled (Actual: %d, Expected: %d)", s.Scheduled(), expectedJobCount)
+		t.Fatalf("scheduled (actual: %d, expected: %d)", s.Scheduled(), expectedJobCount)
 	}
 }
 
@@ -64,7 +64,7 @@ func BenchmarkFIFOSchedule(b *testing.B) {
 
 		expectedJobCount := 100
 		if s.Scheduled() != expectedJobCount {
-			b.Fatalf("scheduled (Actual: %d, Expected: %d)", s.Scheduled(), expectedJobCount)
+			b.Fatalf("scheduled (actual: %d, expected: %d)", s.Scheduled(), expectedJobCount)
 			s.Stop()
 		}
 		s.Stop()

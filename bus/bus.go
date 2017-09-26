@@ -34,8 +34,8 @@ func New() Bus {
 	}
 }
 
-// Dispatch sends an msg to registered handler that were declared
-// to accept values of a msg
+//Dispatch sends an msg to registered handler that were declared
+//to accept values of a msg
 func (b *InProcBus) Dispatch(msg Msg) error {
 	nameOfMsg := reflect.TypeOf(msg)
 
@@ -55,8 +55,8 @@ func (b *InProcBus) Dispatch(msg Msg) error {
 	return nil
 }
 
-// Dispatch sends an msg to all registered listeners that were declared
-// to accept values of a msg
+//Publish sends an msg to all registered listeners that were declared
+//to accept values of a msg
 func (b *InProcBus) Publish(msg Msg) error {
 	nameOfMsg := reflect.TypeOf(msg)
 	listeners := b.listeners[nameOfMsg.String()]
@@ -74,8 +74,8 @@ func (b *InProcBus) Publish(msg Msg) error {
 	return nil
 }
 
-// AddHandler registers a handler function that will be called when a matching
-// msg is dispatched.
+//AddHandler registers a handler function that will be called when a matching
+//msg is dispatched.
 func (b *InProcBus) AddHandler(handler HandlerFunc) error {
 	b.Mutex.Lock()
 	defer b.Mutex.Unlock()
@@ -92,8 +92,8 @@ func (b *InProcBus) AddHandler(handler HandlerFunc) error {
 	return nil
 }
 
-// AddListener registers a listener function that will be called when a matching
-// msg is dispatched.
+//AddListener registers a listener function that will be called when a matching
+//msg is dispatched.
 func (b *InProcBus) AddEventListener(handler HandlerFunc) {
 	b.Mutex.Lock()
 	defer b.Mutex.Unlock()
@@ -109,7 +109,7 @@ func (b *InProcBus) AddEventListener(handler HandlerFunc) {
 	b.listeners[typOfMsg.String()] = append(b.listeners[typOfMsg.String()], reflect.ValueOf(handler))
 }
 
-// panic if conditions not met (this is a programming error)
+//panic if conditions not met (this is a programming error)
 func validateHandlerFunc(handlerType reflect.Type) {
 	switch {
 	case handlerType.Kind() != reflect.Func:
@@ -121,8 +121,8 @@ func validateHandlerFunc(handlerType reflect.Type) {
 	}
 }
 
-// BadFuncError is raised via panic() when AddEventListener is called with an
-// invalid listener function.
+//BadFuncError is raised via panic() when AddEventListener or AddHandler is called with an
+//invalid listener function.
 type BadFuncError string
 
 func (bhf BadFuncError) Error() string {

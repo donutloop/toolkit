@@ -21,15 +21,15 @@ func TestHandlerReturnsError(t *testing.T) {
 
 	err := b.Dispatch(new(msg))
 	if err == nil {
-		t.Fatal("Send query failed " + err.Error())
+		t.Fatalf("dispatch msg failed (%s)", err.Error())
 	}
 }
 
 func TestHandlerReturn(t *testing.T) {
 	b := bus.New()
 
-	b.AddHandler(func(q *msg) error {
-		q.body = "Hello, world!"
+	b.AddHandler(func(m *msg) error {
+		m.body = "Hello, world!"
 		return nil
 	})
 
@@ -37,11 +37,11 @@ func TestHandlerReturn(t *testing.T) {
 	err := b.Dispatch(msg)
 
 	if err != nil {
-		t.Fatal("Send msg failed " + err.Error())
+		t.Fatalf("dispatch msg failed (%s)", err.Error())
 	}
 
 	if msg.body != "Hello, world!" {
-		t.Fatal("Failed to get response from handler")
+		t.Fatal("failed to get response from handler")
 	}
 }
 
@@ -61,11 +61,11 @@ func TestEventListeners(t *testing.T) {
 
 	err := b.Publish(new(msg))
 	if err != nil {
-		t.Fatal("Publish msg failed " + err.Error())
+		t.Fatalf("publish msg failed (%s)", err.Error())
 	}
 
 	if count != 11 {
-		t.Fatal(fmt.Sprintf("Publish msg failed, listeners called: %v, expected: %v", count, 11))
+		t.Fatal(fmt.Sprintf("publish msg failed, listeners called: %v, expected: %v", count, 11))
 	}
 }
 
@@ -80,7 +80,7 @@ func TestAddHandlerBadFunc(t *testing.T) {
 	}()
 
 	b := bus.New()
-	b.AddHandler(func(q *msg, s string) error {
+	b.AddHandler(func(m *msg, s string) error {
 		return nil
 	})
 }
@@ -96,7 +96,7 @@ func TestAddListenerBadFunc(t *testing.T) {
 	}()
 
 	b := bus.New()
-	b.AddEventListener(func(q *msg, s string) error {
+	b.AddEventListener(func(m *msg, s string) error {
 		return nil
 	})
 }
@@ -125,23 +125,23 @@ func BenchmarkRun(b *testing.B) {
 			return nil
 		})
 
-		b.AddHandler(func(q *msg) error {
+		b.AddHandler(func(m *msg) error {
 			return nil
 		})
 
-		b.AddHandler(func(q *msg) error {
+		b.AddHandler(func(m *msg) error {
 			return nil
 		})
 
-		b.AddHandler(func(q *msg) error {
+		b.AddHandler(func(m *msg) error {
 			return nil
 		})
 
-		b.AddHandler(func(q *msg) error {
+		b.AddHandler(func(m *msg) error {
 			return nil
 		})
 
-		b.AddHandler(func(q *msg) error {
+		b.AddHandler(func(m *msg) error {
 			return nil
 		})
 

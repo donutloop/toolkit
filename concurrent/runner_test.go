@@ -28,7 +28,7 @@ func TestRun(t *testing.T) {
 
 	expectedValue := int32(6)
 	if counter != expectedValue {
-		t.Errorf(`unexpected value (Actual: %d, expected: %d)`, counter, expectedValue)
+		t.Errorf(`unexpected value (actual: %d, expected: %d)`, counter, expectedValue)
 	}
 }
 
@@ -50,12 +50,12 @@ func TestRunFail(t *testing.T) {
 
 	expectedCountOfErrors := 2
 	if len(errs) != expectedCountOfErrors {
-		t.Fatalf(`unexpected count of errors (Actual: %d, expected: %d)`, len(errs), expectedCountOfErrors)
+		t.Fatalf(`unexpected count of errors (actual: %d, expected: %d)`, len(errs), expectedCountOfErrors)
 	}
 
 	expectedValue := int32(3)
 	if counter != expectedValue {
-		t.Errorf(`unexpected value (Actual: %d, expected: %d)`, counter, expectedValue)
+		t.Errorf(`unexpected value (actual: %d, expected: %d)`, counter, expectedValue)
 	}
 }
 
