@@ -101,50 +101,46 @@ func TestAddListenerBadFunc(t *testing.T) {
 	})
 }
 
-func BenchmarkRun(b *testing.B) {
+func BenchmarkHandlerRun(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		b := bus.New()
+		bus := bus.New()
 
-		b.AddEventListener(func(m *msg) error {
+		bus.AddHandler(func(m *msg) error {
 			return nil
 		})
 
-		b.AddEventListener(func(m *msg) error {
+		if err := bus.Dispatch(new(msg)); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkListenerRun(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		bus := bus.New()
+
+		bus.AddEventListener(func(m *msg) error {
 			return nil
 		})
 
-		b.AddEventListener(func(m *msg) error {
+		bus.AddEventListener(func(m *msg) error {
 			return nil
 		})
 
-		b.AddEventListener(func(m *msg) error {
+		bus.AddEventListener(func(m *msg) error {
 			return nil
 		})
 
-		b.AddEventListener(func(m *msg) error {
+		bus.AddEventListener(func(m *msg) error {
 			return nil
 		})
 
-		b.AddHandler(func(m *msg) error {
+		bus.AddEventListener(func(m *msg) error {
 			return nil
 		})
 
-		b.AddHandler(func(m *msg) error {
-			return nil
-		})
-
-		b.AddHandler(func(m *msg) error {
-			return nil
-		})
-
-		b.AddHandler(func(m *msg) error {
-			return nil
-		})
-
-		b.AddHandler(func(m *msg) error {
-			return nil
-		})
-
-		b.Dispatch(new(msg))
+		if err := bus.Publish(new(msg)); err != nil {
+			b.Fatal(err)
+		}
 	}
 }
