@@ -16,8 +16,8 @@ type config struct {
 	Port int
 }
 
-var configSingleton = NewSingleton(func() (interface{}, error) {
-	return &config{Addr:"localhost", Port:80,}, nil
+var configSingleton singleton.NewSingleton = singleton.NewSingleton(func() (interface{}, error) {
+	return &config{Addr:"localhost", Port:80}, nil
 })
 
 func Config() (*config, error) {
