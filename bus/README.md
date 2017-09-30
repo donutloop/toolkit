@@ -30,6 +30,6 @@ func main() {
         return nil
     })
 
-    b.Dispatch(new(msg))
+    b.Publish(new(msg))
 }
 ```
