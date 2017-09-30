@@ -1,9 +1,9 @@
 package loop_test
 
 import (
+	"fmt"
 	"github.com/donutloop/toolkit/loop"
 	"time"
-	"fmt"
 )
 
 func ExampleLoop() {
