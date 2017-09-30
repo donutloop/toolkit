@@ -1,9 +1,9 @@
 package schedule_test
 
 import (
-	"github.com/donutloop/toolkit/schedule"
 	"context"
 	"fmt"
+	"github.com/donutloop/toolkit/schedule"
 )
 
 func ExampleFIFOScheduler() {
