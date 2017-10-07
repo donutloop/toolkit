@@ -110,6 +110,8 @@ func (f *Fifo) run() {
 		close(f.resume)
 	}()
 
+	async := newAsync(f.ctx, f.PanicHandler)
+
 	for {
 		var job Job
 		f.mu.Lock()
@@ -128,15 +130,13 @@ func (f *Fifo) run() {
 				f.mu.Unlock()
 				// clean up pending jobs
 				for _, job := range pendings {
-					done := asyncDo(f.ctx, f.PanicHandler, job)
-					<-done
+					async.Do(job)
 				}
+				async.Close()
 				return
 			}
 		} else {
-			done := asyncDo(f.ctx, f.PanicHandler, job)
-			<-done
-
+			async.Do(job)
 			f.finishCond.L.Lock()
 			f.finished++
 			f.pendings = f.pendings[1:]
@@ -146,18 +146,45 @@ func (f *Fifo) run() {
 	}
 }
 
-// AsyncDo is a basic promise implementation: it wraps calls a function in a goroutine
-func asyncDo(ctx context.Context, panicHandler func(stack DebugStack), f func(ctx context.Context)) <-chan struct{} {
-	ch := make(chan struct{}, 1)
-	go func(ch chan struct{}, ctx context.Context, panicHandler func(stack DebugStack)) {
-		defer func() {
-			if err := recover(); err != nil {
-				panicHandler(DebugStack(debug.Stack()))
-			}
-		}()
+func newAsync(ctx context.Context, panicHandler func(stack DebugStack)) *async {
+	a := &async{
+		Ctx:          ctx,
+		PanicHandler: panicHandler,
+		Jobs:         make(chan func(ctx context.Context)),
+	}
+	a.init()
+	return a
+}
 
-		f(ctx)
-		ch <- struct{}{}
-	}(ch, ctx, panicHandler)
-	return ch
+type async struct {
+	Ctx          context.Context
+	Jobs         chan func(ctx context.Context)
+	PanicHandler func(stack DebugStack)
+}
+
+func (a *async) init() {
+	go func(jobs chan func(ctx context.Context), ctx context.Context, panicHandler func(stack DebugStack)) {
+		for job := range jobs {
+			do(job, ctx, panicHandler)
+		}
+	}(a.Jobs, a.Ctx, a.PanicHandler)
+}
+
+func (a *async) Do(f func(ctx context.Context)) {
+	a.Jobs <- f
+}
+
+func (a *async) Close() {
+	close(a.Jobs)
+}
+
+func do(job func(ctx context.Context), ctx context.Context, panicHandler func(stack DebugStack)) {
+
+	defer func() {
+		if err := recover(); err != nil {
+			panicHandler(DebugStack(debug.Stack()))
+		}
+	}()
+
+	job(ctx)
 }
