@@ -8,6 +8,7 @@ import (
 	"context"
 	"github.com/donutloop/toolkit/schedule"
 	"testing"
+	"time"
 )
 
 func TestFIFOSchedule(t *testing.T) {
@@ -35,6 +36,30 @@ func TestFIFOSchedule(t *testing.T) {
 
 	s.WaitFinish(100)
 	expectedJobCount := 100
+	if s.Scheduled() != expectedJobCount {
+		t.Fatalf("scheduled (actual: %d, expected: %d)", s.Scheduled(), expectedJobCount)
+	}
+}
+
+func TestFIFOScheduleCtx(t *testing.T) {
+	s := schedule.NewFIFOScheduler()
+
+	s.Schedule(func(ctx context.Context) {
+		<-time.After(250 * time.Millisecond)
+		err := ctx.Err()
+		if err == nil {
+			t.Fatal("unexpected nil error")
+		}
+
+		expectedErrorMessage := "context canceled"
+		if err.Error() != expectedErrorMessage {
+			t.Fatal(err)
+		}
+	})
+
+	s.Stop()
+
+	expectedJobCount := 1
 	if s.Scheduled() != expectedJobCount {
 		t.Fatalf("scheduled (actual: %d, expected: %d)", s.Scheduled(), expectedJobCount)
 	}
@@ -69,5 +94,4 @@ func BenchmarkFIFOSchedule(b *testing.B) {
 		}
 		s.Stop()
 	}
-
 }
