@@ -6,9 +6,10 @@ package schedule_test
 
 import (
 	"context"
-	"github.com/donutloop/toolkit/schedule"
 	"testing"
 	"time"
+
+	"github.com/donutloop/toolkit/schedule"
 )
 
 func TestFIFOSchedule(t *testing.T) {
