@@ -1,6 +1,6 @@
 # Usage
 
-PrettyPrint generates a human readable representation of the value v.
+PrettySprint generates a human readable representation of the value v.
 
 ## Example 
 ```go 
@@ -12,6 +12,6 @@ import (
 )
 
 func main() {
-    debugutil.PrettyPrint([]string{})
+    log.Println(debugutil.PrettySprint([]string{})
 }
 ```
