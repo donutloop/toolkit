@@ -5,6 +5,7 @@
 package debugutil
 
 import (
+	"bytes"
 	"fmt"
 	"reflect"
 	"strings"
@@ -14,42 +15,53 @@ const (
 	bracketOpen  string = "{\n"
 	bracketClose string = "}"
 	pointerSign  string = "&"
-	nilSign      string = "nil"
+	nilSign      string = "<nil>"
 )
 
-// PrettyPrint generates a human readable representation of the value v.
+// PrettySprint generates a human readable representation of the value v.
 func PrettySprint(v interface{}) string {
+
 	value := reflect.ValueOf(v)
+
+	// nil
+	switch value.Kind() {
+	case reflect.Interface, reflect.Map, reflect.Slice, reflect.Ptr:
+		if value.IsNil() {
+			return nilSign
+		}
+	}
+
+	buff := bytes.Buffer{}
 	switch value.Kind() {
 	case reflect.Struct:
-		str := fullName(value.Type()) + bracketOpen
+		buff.WriteString(fullName(value.Type()) + bracketOpen)
 		for i := 0; i < value.NumField(); i++ {
 			l := string(value.Type().Field(i).Name[0])
 			if strings.ToUpper(l) == l {
-				str += fmt.Sprintf("%s: %s,\n", value.Type().Field(i).Name, PrettySprint(value.Field(i).Interface()))
+				buff.WriteString(fmt.Sprintf("%s: %s,\n", value.Type().Field(i).Name, PrettySprint(value.Field(i).Interface())))
 			}
 		}
-		str += bracketClose
-		return str
+		buff.WriteString(bracketClose)
+		return buff.String()
 	case reflect.Map:
-		str := "map[" + fullName(value.Type().Key()) + "]" + fullName(value.Type().Elem()) + bracketOpen
+		buff.WriteString("map[" + fullName(value.Type().Key()) + "]" + fullName(value.Type().Elem()) + bracketOpen)
 		for _, k := range value.MapKeys() {
-			str += fmt.Sprintf(`"%s":%s,\n`, k.String(), PrettySprint(value.MapIndex(k).Interface()))
+			buff.WriteString(fmt.Sprintf(`"%s":%s,\n`, k.String(), PrettySprint(value.MapIndex(k).Interface())))
 		}
-		str += bracketClose
-		return str
+		buff.WriteString(bracketClose)
+		return buff.String()
 	case reflect.Ptr:
 		if e := value.Elem(); e.IsValid() {
 			return fmt.Sprintf("%s%s", pointerSign, PrettySprint(e.Interface()))
 		}
 		return nilSign
 	case reflect.Slice:
-		str := "[]" + fullName(value.Type().Elem()) + bracketOpen
+		buff.WriteString("[]" + fullName(value.Type().Elem()) + bracketOpen)
 		for i := 0; i < value.Len(); i++ {
-			str += fmt.Sprintf("%s,\n", PrettySprint(value.Index(i).Interface()))
+			buff.WriteString(fmt.Sprintf("%s,\n", PrettySprint(value.Index(i).Interface())))
 		}
-		str += bracketClose
-		return str
+		buff.WriteString(bracketClose)
+		return buff.String()
 	default:
 		return fmt.Sprintf("%#v", v)
 	}
