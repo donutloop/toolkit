@@ -14,11 +14,23 @@ func Test(t *testing.T) {
 
 	strings := "dummy"
 
+	var nilSlice []string = nil
+
 	tests := []struct {
 		name   string
 		input  interface{}
 		output string
 	}{
+		{
+			name:   "pretty print nil slice",
+			input:  nilSlice,
+			output: "<nil>",
+		},
+		{
+			name:   "pretty print nil",
+			input:  nil,
+			output: "<nil>",
+		},
 		{
 			name:  "pretty print slice",
 			input: make([]string, 0),
