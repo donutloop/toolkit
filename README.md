@@ -37,6 +37,57 @@ go get github.com/donutloop/toolkit
 
 In each sub directory is a set of examples 
 
+## Code generation
+
+The code generation tool generates for a pattern an none generic version for spefici type
+
+### Supported pattern
+
+* [Worker](https://github.com/donutloop/toolkit/blob/master/worker/README.md)
+
+### Build
+
+```bash
+mkdir -p $GOPATH/src/github.com/donutloop/ && cd $GOPATH/src/github.com/donutloop/
+
+git clone git@github.com:donutloop/toolkit.git
+
+cd toolkit
+
+go install ./cmd/xcode
+```
+
+### Usage
+
+```bash
+USAGE
+  xcode [flags]
+
+FLAGS
+  -in     input file
+  -out    output file
+  -pkg    package name
+  -type   type
+```
+
+#### Example generation 
+
+```bash 
+xcode -in $GOPATH/src/github.com/donutloop/toolkit/worker/worker.go -out $GOPATH/src/github.com/donutloop/toolkit/worker/new_worker.go -pkg test -type int32 
+```
+
+#### Example call for generated code 
+
+```bash
+workerHandler := func(v int32) {
+    fmt.Println(v)
+}
+
+queue := worker.New(2, workerHandler, 10)
+
+queue <- int32(3)
+```
+
 ## Contribution
 
 Thank you for considering to help out with the source code! We welcome contributions from

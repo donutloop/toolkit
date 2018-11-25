@@ -139,7 +139,7 @@ func usageFor(fs *flag.FlagSet, short string) func() {
 		fmt.Fprintf(os.Stdout, "FLAGS\n")
 		tw := tabwriter.NewWriter(os.Stdout, 0, 2, 2, ' ', 0)
 		fs.VisitAll(func(f *flag.Flag) {
-			if f.Name == "debug" {
+			if f.Name == "mode" {
 				return
 			}
 			def := f.DefValue
