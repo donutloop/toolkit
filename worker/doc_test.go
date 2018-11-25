@@ -7,7 +7,7 @@ import (
 )
 
 func ExampleWorker() {
-	workerHandler := func(parameter interface{}) {
+	workerHandler := func(parameter worker.GenericType) {
 		v := parameter.(string)
 		fmt.Println(v)
 	}

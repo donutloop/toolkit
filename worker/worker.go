@@ -8,13 +8,13 @@ type worker struct {
 	c chan interface{}
 	done chan bool
 	jobs chan interface{}
-	fn    func(n interface{})
+	fn    func(n GenericType)
 	buf   *list.List
 }
 
 // NewWorker starts n*Workers goroutines running func on incoming
 // parameters sent on the returned channel.
-func New(nWorkers uint, fn func(parameter interface{}), buffer uint) chan<- interface{} {
+func New(nWorkers uint, fn func(gt GenericType), buffer uint) chan<- interface{} {
 	retc := make(chan interface{}, buffer)
 	w := &worker{
 		c:     retc,
@@ -62,12 +62,12 @@ func (w *worker) listener() {
 func (w *worker) work() {
 	for {
 		select {
-		case n, ok := <-w.jobs:
+		case genericType, ok := <-w.jobs:
 			if !ok {
 				w.done <- true
 				return
 			}
-			w.fn(n)
+			w.fn(genericType)
 		}
 	}
 }
