@@ -10,13 +10,28 @@ These patterns can you use to solve common problems when designing an applicatio
 
 ## Requirements
 
-Go 1.7+
+* [golang](https://golang.org/) 1.7+ - The Go Programming Language
 
 ## Installation
 
 ```sh
 go get github.com/donutloop/toolkit
 ```
+
+## Patterns 
+
+* [Worker](https://github.com/donutloop/toolkit/blob/master/worker/README.md)
+* [Job schedule](https://github.com/donutloop/toolkit/blob/master/schedule/README.md)
+* [Singleton](https://github.com/donutloop/toolkit/blob/master/singleton/README.md)
+* [Retry](https://github.com/donutloop/toolkit/blob/master/retry/README.md) 
+* [Promise](https://github.com/donutloop/toolkit/blob/master/promise/README.md) 
+* [Multierror](https://github.com/donutloop/toolkit/blob/master/multierror/README.md)
+* [Loop](https://github.com/donutloop/toolkit/blob/master/loop/README.md) 
+* [Lease](https://github.com/donutloop/toolkit/blob/master/lease/README.md)
+* [Event-system](https://github.com/donutloop/toolkit/blob/master/event/README.md)
+* [Debugutil](https://github.com/donutloop/toolkit/blob/master/debugutil/README.md)
+* [Concurrent runner](https://github.com/donutloop/toolkit/blob/master/concurrent/README.md)
+* [Bus-system](https://github.com/donutloop/toolkit/blob/master/bus/README.md)
 
 ## Examples 
 
