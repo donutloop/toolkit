@@ -10,7 +10,7 @@ These patterns can you use to solve common problems when designing an applicatio
 
 ## Requirements
 
-* [golang](https://golang.org/) 1.7+ - The Go Programming Language
+* [golang](https://golang.org/) >=1.11.x - The Go Programming Language
 
 ## Installation
 
