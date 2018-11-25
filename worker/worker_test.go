@@ -26,7 +26,7 @@ func TestWorker(t *testing.T) {
 			return
 		}
 
-		if !containes([]string{"hello", "golang", "world"}, v)	{
+		if !containes([]string{"hello", "golang", "world"}, v) {
 			t.Errorf("value is bad got=%v", parameter)
 		}
 
@@ -40,7 +40,7 @@ func TestWorker(t *testing.T) {
 	queue <- "golang"
 	queue <- "world"
 
-	<- time.After(500 * time.Millisecond)
+	<-time.After(500 * time.Millisecond)
 
 	if atomic.LoadInt32(&counter) != 3 {
 		t.Errorf("counter is bad (want=3, got=%v)", atomic.LoadInt32(&counter))

@@ -15,7 +15,7 @@ func ExampleWorker() {
 	queue := worker.New(2, workerHandler, 10)
 
 	queue <- "hello"
-	<- time.After(time.Millisecond * 250)
+	<-time.After(time.Millisecond * 250)
 
 	// Output: hello
 }
