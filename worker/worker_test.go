@@ -19,7 +19,7 @@ func TestWorker(t *testing.T) {
 	}
 
 	counter := int32(0)
-	workerHandler := func(parameter interface{}) {
+	workerHandler := func(parameter worker.GenericType) {
 		v, ok := parameter.(string)
 		if !ok {
 			t.Errorf("value is not a string got=%v", parameter)
