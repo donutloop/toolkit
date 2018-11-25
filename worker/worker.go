@@ -5,11 +5,11 @@ import (
 )
 
 type worker struct {
-	c chan interface{}
+	c    chan interface{}
 	done chan bool
 	jobs chan interface{}
-	fn    func(n GenericType)
-	buf   *list.List
+	fn   func(n GenericType)
+	buf  *list.List
 }
 
 // NewWorker starts n*Workers goroutines running func on incoming
@@ -17,11 +17,11 @@ type worker struct {
 func New(nWorkers uint, fn func(gt GenericType), buffer uint) chan<- interface{} {
 	retc := make(chan interface{}, buffer)
 	w := &worker{
-		c:     retc,
+		c:    retc,
 		jobs: make(chan interface{}, buffer),
 		done: make(chan bool),
-		fn:    fn,
-		buf:   list.New(),
+		fn:   fn,
+		buf:  list.New(),
 	}
 	go w.listener()
 	for i := uint(0); i < nWorkers; i++ {
