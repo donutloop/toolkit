@@ -32,10 +32,10 @@ import (
 func main() {
 
     resp := &http.Response{}
-    b , err := debugutil.PrettyDumpResponse(resp, true)
+    s , err := debugutil.PrettySprintResponse(resp)
     if err != nil {
         log.Fatal(err)
     }    
-    log.Println(string(b))
+    log.Println(s)
 }
 ```

@@ -40,10 +40,10 @@ X-Xss-Protection: 1; mode=block
 		t.Fatal(err)
 	}
 
-	dump, err := debugutil.PrettyDumpResponse(resp, true)
+	s, err := debugutil.PrettySprintResponse(resp)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	t.Log(string(dump))
+	t.Log(s)
 }

@@ -9,6 +9,15 @@ import (
 )
 
 
+// PrettyPrintResponse is pretty printing a http response
+func PrettySprintResponse(resp *http.Response) (string, error) {
+	dump, err := PrettyDumpResponse(resp, true)
+	if err != nil {
+		return "", err
+	}
+	return string(dump), nil
+}
+
 // PrettyDumpResponse is like DumpResponse but dump is pretty formatted.
 func PrettyDumpResponse(resp *http.Response, body bool) ([]byte, error) {
 
