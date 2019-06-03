@@ -39,3 +39,27 @@ func main() {
     log.Println(s)
 }
 ```
+
+PrettyRequestDump creates a human readable representation of the value http.Request.
+
+## Example 
+
+```go 
+package main 
+
+import (
+	"github.com/donutloop/toolkit/debugutil"
+	"log"
+	"net/http"
+)
+
+func main() {
+
+    req := &http.Request{}
+    s , err := debugutil.PrettySprintRequest(req)
+    if err != nil {
+        log.Fatal(err)
+    }    
+    log.Println(s)
+}
+```
