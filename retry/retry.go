@@ -11,52 +11,46 @@ import (
 	"time"
 )
 
-const standardTriesCount uint = 10
-
 type ExhaustedError struct{}
 
 func (r *ExhaustedError) Error() string {
 	return "function never succeeded in Retry"
 }
 
+type Retrier interface {
+	Retry(ctx context.Context, do RetryableDo) error
+}
+
 type RetryableDo func() (bool, error)
 
-func NewRetrier() *Retrier {
-	return &Retrier{
-		InitialInterval: 1,
-		MaxInterval:     3,
-		Tries:           standardTriesCount,
+func NewRetrier(InitialIntervalInSeconds, maxIntervalInSeconds float64, tries uint) Retrier {
+	return &retrier{
+		initialIntervalInSeconds: InitialIntervalInSeconds,
+		maxIntervalInSeconds:     maxIntervalInSeconds,
+		tries:           tries,
 	}
 }
 
 // Retry supervised do funcs which automatically handle failures when they occur by performing retries.
-type Retrier struct {
-	InitialInterval float64
-	MaxInterval     float64
-	Tries           uint
+type retrier struct {
+	initialIntervalInSeconds float64
+	maxIntervalInSeconds     float64
+	tries           uint
 }
 
-func (r *Retrier) Retry(ctx context.Context, do RetryableDo) error {
+func (r *retrier) Retry(ctx context.Context, do RetryableDo) error {
 	if ctx == nil {
 		ctx = context.Background()
 	}
 
-	if r.InitialInterval <= 0 {
-		r.InitialInterval = 1
-	}
-
-	if r.Tries == 0 {
-		r.Tries = standardTriesCount
-	}
-
-	if r.InitialInterval > r.MaxInterval {
-		return fmt.Errorf("initial interval is greater than max (initial: %f, max: %f)", r.InitialInterval, r.MaxInterval)
+	if r.initialIntervalInSeconds > r.maxIntervalInSeconds {
+		return fmt.Errorf("initial interval is greater than max (initial: %f, max: %f)", r.initialIntervalInSeconds, r.maxIntervalInSeconds)
 	}
 
 	var err error
 	var done bool
-	interval := r.InitialInterval
-	for i := uint(0); !done && i < r.Tries; i++ {
+	interval := r.initialIntervalInSeconds
+	for i := uint(0); !done && i < r.tries; i++ {
 		done, err = do()
 
 		if ctx.Err() != nil {
@@ -69,7 +63,7 @@ func (r *Retrier) Retry(ctx context.Context, do RetryableDo) error {
 
 		if !done {
 			time.Sleep(time.Duration(interval) * time.Second)
-			interval = math.Min(interval*2, r.MaxInterval)
+			interval = math.Min(interval*2, r.maxIntervalInSeconds)
 		}
 	}
 
