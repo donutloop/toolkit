@@ -15,7 +15,13 @@ These patterns can you use to solve common problems when designing an applicatio
 ## Installation
 
 ```sh
-go get github.com/donutloop/toolkit
+go get github.com/donutloop/toolkit/{any_package}
+```
+
+### Example
+
+```sh
+go get github.com/donutloop/toolkit/worker
 ```
 
 ## Patterns 
