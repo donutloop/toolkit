@@ -7,7 +7,7 @@ import (
 )
 
 func ExampleRetrier() {
-	r := retry.NewRetrier(0.125, 0.25, 2)
+	r := retry.NewRetrier(0.125, 0.25, 2, new(retry.Exp))
 	err := r.Retry(context.Background(), func() (bool, error) {
 		fmt.Println("fire request")
 		return true, nil

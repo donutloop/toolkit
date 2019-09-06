@@ -14,7 +14,7 @@ import (
 
 func main() {
 
-    r := retry.NewRetrier()
+    r := retry.NewRetrier(0.125, 0.25, 2, new(retry.Exp))
   
     err := r.Retry(context.Background(), func() (bool, error) {
    		// do things
@@ -40,7 +40,7 @@ import (
 )
 
 func main() {
-        retryRoundTripper := retry.NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, []int{http.StatusBadRequest})
+        retryRoundTripper := retry.NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, []int{http.StatusBadRequest}, new(retry.Exp))
 	httpClient := new(http.Client)
 	httpClient.Transport = retryRoundTripper
 

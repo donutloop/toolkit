@@ -23,18 +23,28 @@ type Retrier interface {
 
 type RetryableDo func() (bool, error)
 
-func NewRetrier(InitialIntervalInSeconds, maxIntervalInSeconds float64, tries uint) Retrier {
+func NewRetrier(InitialIntervalInSeconds, maxIntervalInSeconds float64, tries uint, strategy Strategy) Retrier {
+
+	if strategy == nil {
+		panic("strategy is missing")
+	}
+
+	if InitialIntervalInSeconds > maxIntervalInSeconds {
+		panic(fmt.Sprintf("initial interval is greater than max (initial: %f, max: %f)", InitialIntervalInSeconds, maxIntervalInSeconds))
+	}
+
 	return &retrier{
-		initialIntervalInSeconds: InitialIntervalInSeconds,
-		maxIntervalInSeconds:     maxIntervalInSeconds,
+		InitialIntervalInSeconds: InitialIntervalInSeconds,
+		maxIntervalInSeconds: maxIntervalInSeconds,
+		strategy:        strategy,
 		tries:           tries,
 	}
 }
 
 // Retry supervised do funcs which automatically handle failures when they occur by performing retries.
 type retrier struct {
-	initialIntervalInSeconds float64
-	maxIntervalInSeconds     float64
+	InitialIntervalInSeconds, maxIntervalInSeconds float64
+	strategy             Strategy
 	tries           uint
 }
 
@@ -43,13 +53,9 @@ func (r *retrier) Retry(ctx context.Context, do RetryableDo) error {
 		ctx = context.Background()
 	}
 
-	if r.initialIntervalInSeconds > r.maxIntervalInSeconds {
-		return fmt.Errorf("initial interval is greater than max (initial: %f, max: %f)", r.initialIntervalInSeconds, r.maxIntervalInSeconds)
-	}
 
 	var err error
 	var done bool
-	interval := r.initialIntervalInSeconds
 	for i := uint(0); !done && i < r.tries; i++ {
 		done, err = do()
 
@@ -62,8 +68,7 @@ func (r *retrier) Retry(ctx context.Context, do RetryableDo) error {
 		}
 
 		if !done {
-			time.Sleep(time.Duration(interval) * time.Second)
-			interval = math.Min(interval*2, r.maxIntervalInSeconds)
+			r.InitialIntervalInSeconds = r.strategy.Policy(r.InitialIntervalInSeconds, r.maxIntervalInSeconds)
 		}
 	}
 
@@ -71,4 +76,15 @@ func (r *retrier) Retry(ctx context.Context, do RetryableDo) error {
 		return new(ExhaustedError)
 	}
 	return nil
+}
+
+type Strategy interface {
+	Policy(intervalInSeconds, maxIntervalInSeconds float64) float64
+}
+
+type Exp struct {}
+
+func (e *Exp) Policy(intervalInSeconds, maxIntervalInSeconds float64) float64 {
+	time.Sleep(time.Duration(intervalInSeconds) * time.Second)
+	return math.Min(intervalInSeconds*2, maxIntervalInSeconds)
 }

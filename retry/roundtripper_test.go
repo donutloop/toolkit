@@ -16,7 +16,7 @@ func TestRoundTripper_RoundTripInternalServer(t *testing.T) {
 			w.WriteHeader(http.StatusInternalServerError)
 	}))
 
-	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, nil)
+	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, nil, new(Exp))
 	httpClient := new(http.Client)
 	httpClient.Transport = retryRoundTripper
 
@@ -48,7 +48,7 @@ func TestRoundTripper_RoundTripInternalServerBlacklisted(t *testing.T) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 
-	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, []int{http.StatusInternalServerError})
+	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, []int{http.StatusInternalServerError}, new(Exp))
 	httpClient := new(http.Client)
 	httpClient.Transport = retryRoundTripper
 
@@ -80,7 +80,7 @@ func TestRoundTripper_RoundTripStatusOk(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
-	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, nil)
+	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, nil, new(Exp))
 	httpClient := new(http.Client)
 	httpClient.Transport = retryRoundTripper
 

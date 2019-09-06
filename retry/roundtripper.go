@@ -12,8 +12,8 @@ type RoundTripper struct {
 }
 
 // NewRoundTripper is constructing a new retry RoundTripper with given default values
-func NewRoundTripper(next http.RoundTripper, maxInterval, initialInterval float64, tries uint, blacklistStatusCodes []int) *RoundTripper {
-	retrier := NewRetrier(initialInterval, maxInterval, tries)
+func NewRoundTripper(next http.RoundTripper, maxInterval, initialInterval float64, tries uint, blacklistStatusCodes []int, strategy Strategy) *RoundTripper {
+	retrier := NewRetrier(initialInterval, maxInterval, tries, strategy)
 	return &RoundTripper{
 		retrier:retrier,
 		next: next,
