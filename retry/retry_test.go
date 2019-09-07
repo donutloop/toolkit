@@ -12,7 +12,7 @@ import (
 )
 
 func TestRetrierRetryContextDeadlineFail(t *testing.T) {
-	r := retry.NewRetrier()
+	r := retry.NewRetrier(0.125, 0.25, 2, new(retry.Exp))
 
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
@@ -31,7 +31,7 @@ func TestRetrierRetryContextDeadlineFail(t *testing.T) {
 }
 
 func TestRetrierRetry(t *testing.T) {
-	r := retry.NewRetrier()
+	r := retry.NewRetrier(0.125, 0.25, 2, new(retry.Exp))
 	err := r.Retry(context.Background(), func() (bool, error) {
 		return true, nil
 	})
@@ -42,7 +42,7 @@ func TestRetrierRetry(t *testing.T) {
 }
 
 func TestRetrierRetryTriggerError(t *testing.T) {
-	r := retry.NewRetrier()
+	r := retry.NewRetrier(0.125, 0.25, 2, new(retry.Exp))
 	err := r.Retry(context.Background(), func() (bool, error) {
 		return false, errors.New("stub error")
 	})
@@ -58,10 +58,7 @@ func TestRetrierRetryTriggerError(t *testing.T) {
 }
 
 func TestRetrierRetryFail(t *testing.T) {
-	r := retry.NewRetrier()
-	r.InitialInterval = 0.125
-	r.Tries = 2
-	r.MaxInterval = 0.25
+	r := retry.NewRetrier(0.125, 0.25, 2, new(retry.Exp))
 
 	err := r.Retry(context.Background(), func() (bool, error) {
 		return false, nil
