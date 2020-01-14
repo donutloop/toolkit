@@ -7,15 +7,16 @@ import (
 )
 
 func ExampleWorker() {
-	workerHandler := func(parameter worker.GenericType) {
+	workerHandler := func(parameter interface{}) (interface{}, error) {
 		v := parameter.(string)
-		fmt.Println(v)
+		return v + " world", nil
 	}
 
-	queue := worker.New(2, workerHandler, 10)
+	request, response, _ := worker.New(2, workerHandler, 10)
 
-	queue <- "hello"
+	request <- "hello"
 	<-time.After(time.Millisecond * 250)
+	fmt.Println(<-response)
 
-	// Output: hello
+	// Output: hello world
 }

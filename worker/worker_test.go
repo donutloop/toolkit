@@ -1,6 +1,7 @@
 package worker_test
 
 import (
+	"fmt"
 	"github.com/donutloop/toolkit/worker"
 	"sync/atomic"
 	"testing"
@@ -19,11 +20,10 @@ func TestWorker(t *testing.T) {
 	}
 
 	counter := int32(0)
-	workerHandler := func(parameter worker.GenericType) {
+	workerHandler := func(parameter interface{}) (interface{}, error) {
 		v, ok := parameter.(string)
 		if !ok {
-			t.Errorf("value is not a string got=%v", parameter)
-			return
+			return false, fmt.Errorf("value is not a string got=%v", parameter)
 		}
 
 		if !containes([]string{"hello", "golang", "world"}, v) {
@@ -32,13 +32,28 @@ func TestWorker(t *testing.T) {
 
 		t.Logf("value: %v", v)
 		atomic.AddInt32(&counter, 1)
+		return true, nil
 	}
 
-	queue := worker.New(3, workerHandler, 10)
+	request, response, errs := worker.New(3, workerHandler, 10)
 
-	queue <- "hello"
-	queue <- "golang"
-	queue <- "world"
+	request <- "hello"
+	request <- "golang"
+	request <- "world"
+
+	go func() {
+		for err := range errs {
+			t.Error(err)
+		}
+	}()
+
+	go func() {
+		for v := range response {
+			if !v.(bool) {
+				t.Error("bad type")
+			}
+		}
+	}()
 
 	<-time.After(500 * time.Millisecond)
 
