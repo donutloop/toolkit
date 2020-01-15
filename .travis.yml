@@ -1,16 +1,16 @@
 language: go
 go:
-- 1.11.x
-- master
+  - 1.13.x
 
 os:
-- linux
-- osx
+  - linux
+  - osx
 
-dist: trusty
 sudo: false
 
-install: true
+before_install:
+  - go get github.com/mattn/goveralls
 
 script:
-  - env GO111MODULE=on go test -v ./...
+  - go test -v  ./...
+  - $HOME/gopath/bin/goveralls -service=travis-ci
