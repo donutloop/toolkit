@@ -4,24 +4,34 @@ import (
 	"container/list"
 )
 
+type Request chan<- interface{}
+
+type Response <-chan interface{}
+
 type worker struct {
-	c    chan interface{}
-	done chan bool
-	jobs chan interface{}
-	fn   func(n GenericType)
-	buf  *list.List
+	request  chan interface{}
+	response chan interface{}
+	errs     chan error
+	done     chan bool
+	jobs     chan interface{}
+	fn       func(n interface{}) (interface{}, error)
+	buf      *list.List
 }
 
 // NewWorker starts n*Workers goroutines running func on incoming
 // parameters sent on the returned channel.
-func New(nWorkers uint, fn func(gt GenericType), buffer uint) chan<- interface{} {
-	retc := make(chan interface{}, buffer)
+func New(nWorkers uint, fn func(gt interface{}) (interface{}, error), buffer uint) (Request, Response, <-chan error) {
+	request := make(chan interface{}, buffer)
+	response := make(chan interface{}, buffer)
+	errs := make(chan error, buffer)
 	w := &worker{
-		c:    retc,
-		jobs: make(chan interface{}, buffer),
-		done: make(chan bool),
-		fn:   fn,
-		buf:  list.New(),
+		errs:     errs,
+		request:  request,
+		response: response,
+		jobs:     make(chan interface{}, buffer),
+		done:     make(chan bool),
+		fn:       fn,
+		buf:      list.New(),
 	}
 	go w.listener()
 	for i := uint(0); i < nWorkers; i++ {
@@ -32,11 +42,11 @@ func New(nWorkers uint, fn func(gt GenericType), buffer uint) chan<- interface{}
 			<-w.done
 		}
 	}()
-	return retc
+	return request, response, errs
 }
 
 func (w *worker) listener() {
-	inc := w.c
+	inc := w.request
 	for inc != nil || w.buf.Len() > 0 {
 		outc := w.jobs
 		var frontNode interface{}
@@ -67,7 +77,12 @@ func (w *worker) work() {
 				w.done <- true
 				return
 			}
-			w.fn(genericType)
+			v, err := w.fn(genericType)
+			if err != nil {
+				w.errs <- err
+				continue
+			}
+			w.response <- v
 		}
 	}
 }
