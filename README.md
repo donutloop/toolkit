@@ -45,6 +45,8 @@ In each sub directory is a set of examples
 
 ## Code generation
 
+`Currently, it's only compatiable with version 2.x.x`
+
 The code generation tool generates for a pattern an none generic version for spefici type
 
 ### Supported pattern
