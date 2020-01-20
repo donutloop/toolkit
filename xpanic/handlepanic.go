@@ -1,4 +1,4 @@
-package handlepanic
+package xpanic
 
 import (
 	"bytes"
