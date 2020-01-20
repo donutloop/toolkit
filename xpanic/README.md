@@ -1,5 +1,7 @@
 # Usage
 
+It's a powerful panic handler to simplify reasoning of panics
+
 ## Example 
 ```go 
 package main 
