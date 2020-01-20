@@ -27,7 +27,7 @@ func BuildPanicHandler(errorf func(format string, args ...interface{}), crashOnE
 			errorf("capture panic infos")
 
 			errorf(fmt.Sprintf("panic: %s", r))
-			Backtrace(errorf)
+			backtrace(errorf)
 
 			if crashOnError {
 				signal.Reset(syscall.SIGABRT)
@@ -41,7 +41,7 @@ func BuildPanicHandler(errorf func(format string, args ...interface{}), crashOnE
 }
 
 // Backtrace writes a multi-line backtrace to the logger.
-func Backtrace(errorf func(format string, args ...interface{})) {
+func backtrace(errorf func(format string, args ...interface{})) {
 	profiles := pprof.Profiles()
 	buf := new(bytes.Buffer)
 
