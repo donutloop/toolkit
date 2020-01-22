@@ -19,7 +19,7 @@ type LogRoundTripper struct {
 // RoundTripper returns a new http.RoundTripper which logs all requests (request and response dump)
 // Should only be used for none production envs
 func NewLogRoundTripper(roundTripper http.RoundTripper, logger logger, dumpBody bool) http.RoundTripper {
-	return LogRoundTripper{roundTripper, logger, true}
+	return LogRoundTripper{roundTripper, logger, dumpBody}
 }
 
 func (tr LogRoundTripper) RoundTrip(req *http.Request) (res *http.Response, err error) {
