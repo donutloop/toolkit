@@ -55,3 +55,39 @@ func TestInjectMiddlware(t *testing.T) {
 		log.Fatal(err)
 	}
 }
+
+func TestPanicNilClient(t *testing.T) {
+	defer func() {
+		v := recover()
+		err := v.(error)
+		if err.Error() != "client is nil" {
+			t.Errorf("error message is bad (%v)", v)
+		}
+	}()
+
+	xhttp.Use(nil, nil)
+}
+
+func TestPanicNilMiddleware(t *testing.T) {
+	defer func() {
+		v := recover()
+		err := v.(error)
+		if err.Error() != "middleware is nil" {
+			t.Errorf("error message is bad (%v)", v)
+		}
+	}()
+
+	xhttp.Use(new(http.Client), nil)
+}
+
+func TestPanicNilMiddlewares(t *testing.T) {
+	defer func() {
+		v := recover()
+		err := v.(error)
+		if err.Error() != "middlewares is nil" {
+			t.Errorf("error message is bad (%v)", v)
+		}
+	}()
+
+	xhttp.Use(new(http.Client))
+}
