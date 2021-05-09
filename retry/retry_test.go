@@ -12,11 +12,14 @@ import (
 	"github.com/donutloop/toolkit/retry"
 )
 
+var StubErr error = errors.New("stub error")
+
 func TestRetrierRetryContextDeadlineFail(t *testing.T) {
 	r := retry.NewRetrier(0.125, 0.25, 2, new(retry.Exp))
 
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
+
 	err := r.Retry(ctx, func() (bool, error) {
 		return true, nil
 	})
@@ -45,15 +48,14 @@ func TestRetrierRetry(t *testing.T) {
 func TestRetrierRetryTriggerError(t *testing.T) {
 	r := retry.NewRetrier(0.125, 0.25, 2, new(retry.Exp))
 	err := r.Retry(context.Background(), func() (bool, error) {
-		return false, errors.New("stub error")
+		return false, StubErr
 	})
 
 	if err == nil {
 		t.Fatal("unexpected nil error")
 	}
 
-	expectedErrorMessage := "stub error"
-	if err.Error() != expectedErrorMessage {
+	if !errors.Is(err, StubErr) {
 		t.Fatal(err)
 	}
 }

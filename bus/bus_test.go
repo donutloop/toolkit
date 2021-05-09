@@ -13,11 +13,13 @@ type msg struct {
 	body string
 }
 
+var handlerError error = errors.New("handler error")
+
 func TestHandlerReturnsError(t *testing.T) {
 	b := bus.New()
 
 	err := b.AddHandler(func(m *msg) error {
-		return errors.New("handler error")
+		return handlerError
 	})
 	if err != nil {
 		t.Fatal(err)

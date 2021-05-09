@@ -9,6 +9,14 @@ import (
 	"github.com/donutloop/toolkit/worker"
 )
 
+type BadValueError struct {
+	value interface{}
+}
+
+func (v *BadValueError) Error() string {
+	return fmt.Sprintf("value is not of descired type got=%v,%#v", v.value, v.value)
+}
+
 func TestWorker(t *testing.T) {
 
 	contains := func(ls []string, s string) bool {
@@ -24,7 +32,7 @@ func TestWorker(t *testing.T) {
 	workerHandler := func(parameter interface{}) (interface{}, error) {
 		v, ok := parameter.(string)
 		if !ok {
-			return false, fmt.Errorf("value is not a string got=%v", parameter)
+			return false, &BadValueError{value: parameter}
 		}
 
 		if !contains([]string{"hello", "golang", "world"}, v) {

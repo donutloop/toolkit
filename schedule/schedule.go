@@ -49,13 +49,15 @@ func defaultPanicHandler(stack DebugStack) {
 	log.Println(string(stack))
 }
 
+var StoppedScheduler error = errors.New("schedule: schedule to stopped scheduler")
+
 // Schedule schedules a job that will be ran in FIFO order sequentially.
 func (f *Fifo) Schedule(j Job) error {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 
 	if f.cancel == nil {
-		return errors.New("schedule: schedule to stopped scheduler")
+		return StoppedScheduler
 	}
 
 	if len(f.pendings) == 0 {

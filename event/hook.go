@@ -2,6 +2,7 @@ package event
 
 import (
 	"fmt"
+	"runtime/debug"
 	"sync"
 )
 
@@ -43,10 +44,17 @@ func (h *Hooks) Fire() []error {
 func hookWrapper(wg *sync.WaitGroup, hook func(), errc chan error) {
 	defer func() {
 		if v := recover(); v != nil {
-			errc <- fmt.Errorf("hook is panicked (%v)", v)
+			errc <- &RecoverError{Err: v, Stack: debug.Stack()}
 		}
 		wg.Done()
 	}()
 
 	hook()
 }
+
+type RecoverError struct {
+	Err   interface{}
+	Stack []byte
+}
+
+func (e *RecoverError) Error() string { return fmt.Sprintf("Do panicked: %v", e.Err) }

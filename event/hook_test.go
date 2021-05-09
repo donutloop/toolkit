@@ -48,7 +48,7 @@ func TestHooksPanic(t *testing.T) {
 		t.Fatalf("error count is bad (%d)", len(errs))
 	}
 
-	expectedMessage := "hook is panicked (check isolation of goroutine)"
+	expectedMessage := "Do panicked: check isolation of goroutine"
 	if errs[0].Error() != expectedMessage {
 		t.Fatalf(`unexpected error message (actual: "%s", expected: "%s")`, errs[0].Error(), expectedMessage)
 	}

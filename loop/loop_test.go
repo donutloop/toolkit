@@ -13,6 +13,8 @@ import (
 	"github.com/donutloop/toolkit/loop"
 )
 
+var StubErr error = errors.New("stub error")
+
 func TestLoop(t *testing.T) {
 	var counter int
 	l := loop.NewLooper(1*time.Millisecond, func() error {
@@ -28,22 +30,24 @@ func TestLoop(t *testing.T) {
 	}
 }
 
+var GoroutineError error = fmt.Errorf("check isolation of goroutine")
+
 func TestLoopFail(t *testing.T) {
 	l := loop.NewLooper(1*time.Millisecond, func() error {
-		panic(fmt.Errorf("check isolation of goroutine"))
+		panic(GoroutineError)
 	})
 
 	err := <-l.Error()
-	if err.Error() != "event is panicked (check isolation of goroutine)" {
+	if err.Error() != "Do panicked: check isolation of goroutine" {
 		t.Fatal(err)
 	}
 
 	l = loop.NewLooper(1*time.Millisecond, func() error {
-		return errors.New("stub error")
+		return StubErr
 	})
 
 	err = <-l.Error()
-	if err.Error() != "stub error" {
+	if !errors.Is(err, StubErr) {
 		t.Fatal(err)
 	}
 }

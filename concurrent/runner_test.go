@@ -8,6 +8,8 @@ import (
 	"github.com/donutloop/toolkit/concurrent"
 )
 
+var StubErr error = errors.New("stub error")
+
 func TestRun(t *testing.T) {
 	counter := int32(0)
 	errs := concurrent.Run(
@@ -38,7 +40,7 @@ func TestRunFail(t *testing.T) {
 	counter := int32(0)
 	errs := concurrent.Run(
 		func() error {
-			return errors.New("stub error")
+			return StubErr
 		},
 		func() error {
 			panic("check isolation of goroutine")
@@ -64,7 +66,7 @@ func BenchmarkRun(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		concurrent.Run(
 			func() error {
-				return errors.New("stub error")
+				return StubErr
 			},
 			func() error {
 				panic("check isolation of goroutine")

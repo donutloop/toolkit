@@ -23,18 +23,18 @@ type Retrier interface {
 
 type RetryableDo func() (bool, error)
 
-func NewRetrier(InitialIntervalInSeconds, maxIntervalInSeconds float64, tries uint, strategy Strategy) Retrier {
+func NewRetrier(initialIntervalInSeconds, maxIntervalInSeconds float64, tries uint, strategy Strategy) Retrier {
 
 	if strategy == nil {
 		panic("strategy is missing")
 	}
 
-	if InitialIntervalInSeconds > maxIntervalInSeconds {
-		panic(fmt.Sprintf("initial interval is greater than max (initial: %f, max: %f)", InitialIntervalInSeconds, maxIntervalInSeconds))
+	if initialIntervalInSeconds > maxIntervalInSeconds {
+		panic(fmt.Sprintf("initial interval is greater than max (initial: %f, max: %f)", initialIntervalInSeconds, maxIntervalInSeconds))
 	}
 
 	return &retrier{
-		InitialIntervalInSeconds: InitialIntervalInSeconds,
+		InitialIntervalInSeconds: initialIntervalInSeconds,
 		maxIntervalInSeconds:     maxIntervalInSeconds,
 		strategy:                 strategy,
 		tries:                    tries,
@@ -54,8 +54,11 @@ func (r *retrier) Retry(ctx context.Context, do RetryableDo) error {
 	}
 
 	var err error
+
 	var done bool
+
 	for i := uint(0); !done && i < r.tries; i++ {
+
 		done, err = do()
 
 		if ctx.Err() != nil {
@@ -74,6 +77,7 @@ func (r *retrier) Retry(ctx context.Context, do RetryableDo) error {
 	if !done {
 		return new(ExhaustedError)
 	}
+
 	return nil
 }
 
