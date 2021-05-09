@@ -17,7 +17,7 @@ type Singleton interface {
 }
 
 // Call to create a new singleton that is instantiated with the given constructor function.
-// constructor is not called until the first call of Get(). If constructor returns a error, it will be called again
+// Constructor is not called until the first call of Get(). If constructor returns a error, it will be called again
 // on the next call of Get().
 func NewSingleton(constructor ConstructorFunc) Singleton {
 	return &singleton{
@@ -54,7 +54,7 @@ func (s *singleton) Get() (interface{}, error) {
 	return s.object, nil
 }
 
-// Reset indicates that the next call of Get should actually a create instance
+// Reset indicates that the next call of Get should actually a create instance.
 func (s *singleton) Reset() {
 	s.m.Lock()
 	defer s.m.Unlock()

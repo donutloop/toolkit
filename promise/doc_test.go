@@ -3,10 +3,11 @@ package promise_test
 import (
 	"context"
 	"fmt"
+
 	"github.com/donutloop/toolkit/promise"
 )
 
-func ExamplePromise() {
+func Example() {
 
 	done, errc := promise.Do(context.Background(), func(ctx context.Context) error {
 		fmt.Println("do things")
@@ -16,7 +17,7 @@ func ExamplePromise() {
 	select {
 	case <-done:
 	case err := <-errc:
-		fmt.Println(fmt.Sprintf("error: %v", err))
+		fmt.Printf("error: %v \n", err)
 	}
 
 	// Output: do things

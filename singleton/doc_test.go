@@ -2,6 +2,7 @@ package singleton_test
 
 import (
 	"fmt"
+
 	"github.com/donutloop/toolkit/singleton"
 )
 
@@ -23,14 +24,12 @@ func ExampleSingleton() {
 		}
 		return s.(*config), nil
 	}
-
-	configFunc()
-
+	
 	c, err := configFunc()
 	if err != nil {
-		fmt.Println(fmt.Sprintf("error: (%v)", err))
+		fmt.Printf("error: (%v) \n", err)
 	}
 
-	fmt.Println(fmt.Sprintf("%#v", c))
+	fmt.Printf("%#v \n", c)
 	// Output: &singleton_test.config{Addr:"localhost", Port:80}
 }

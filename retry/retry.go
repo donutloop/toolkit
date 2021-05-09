@@ -83,7 +83,9 @@ type Strategy interface {
 
 type Exp struct{}
 
+const expCurve float64 = 2
+
 func (e *Exp) Policy(intervalInSeconds, maxIntervalInSeconds float64) float64 {
 	time.Sleep(time.Duration(intervalInSeconds) * time.Second)
-	return math.Min(intervalInSeconds*2, maxIntervalInSeconds)
+	return math.Min(intervalInSeconds*expCurve, maxIntervalInSeconds)
 }

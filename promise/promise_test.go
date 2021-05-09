@@ -6,12 +6,15 @@ package promise_test
 
 import (
 	"context"
-	"fmt"
-	"github.com/donutloop/toolkit/promise"
+	"errors"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/donutloop/toolkit/promise"
 )
+
+var stubError error = errors.New("stub")
 
 func TestDoPanic(t *testing.T) {
 
@@ -26,7 +29,7 @@ func TestDoPanic(t *testing.T) {
 			t.Fatal("unexpected nil error")
 		}
 
-		if !strings.Contains(err.Error(), "promise is panicked") {
+		if !strings.Contains(err.Error(), "Do panicked") {
 			t.Fatalf(`unexpected error message (actual: "%s", expected: "promise is panicked (*)")`, err.Error())
 		}
 	}
@@ -35,7 +38,7 @@ func TestDoPanic(t *testing.T) {
 func TestDoFail(t *testing.T) {
 
 	done, errc := promise.Do(context.Background(), func(ctx context.Context) error {
-		return fmt.Errorf("stub")
+		return stubError
 	})
 
 	select {

@@ -7,8 +7,9 @@ package retry_test
 import (
 	"context"
 	"errors"
-	"github.com/donutloop/toolkit/retry"
 	"testing"
+
+	"github.com/donutloop/toolkit/retry"
 )
 
 func TestRetrierRetryContextDeadlineFail(t *testing.T) {

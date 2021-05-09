@@ -3,11 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/donutloop/toolkit/internal/ast"
 	"io/ioutil"
 	"log"
 	"os"
 	"text/tabwriter"
+
+	"github.com/donutloop/toolkit/internal/ast"
 )
 
 func main() {

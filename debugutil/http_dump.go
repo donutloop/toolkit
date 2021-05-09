@@ -8,12 +8,13 @@ import (
 	"strings"
 )
 
-// PrettyPrintResponse is pretty printing a http response
+// PrettyPrintResponse is pretty printing a http response.
 func PrettySprintResponse(resp *http.Response) (string, error) {
 	dump, err := PrettyDumpResponse(resp, true)
 	if err != nil {
 		return "", err
 	}
+
 	return string(dump), nil
 }
 
@@ -31,21 +32,24 @@ func PrettyDumpResponse(resp *http.Response, body bool) ([]byte, error) {
 		jsonRaw := b[int64(len(b))-resp.ContentLength:]
 		b = b[:int64(len(b))-resp.ContentLength]
 		buffer.Write(b)
+
 		if err := json.Indent(buffer, jsonRaw, "", "\t"); err != nil {
 			return nil, err
 		}
+
 		return buffer.Bytes(), nil
 	}
 
 	return b, nil
 }
 
-// PrettySprintRequest is pretty printing a http request
+// PrettySprintRequest is pretty printing a http request.
 func PrettySprintRequest(resp *http.Request) (string, error) {
 	dump, err := PrettyDumpRequest(resp, true)
 	if err != nil {
 		return "", err
 	}
+
 	return string(dump), nil
 }
 
@@ -63,9 +67,11 @@ func PrettyDumpRequest(req *http.Request, body bool) ([]byte, error) {
 		jsonRaw := b[int64(len(b))-req.ContentLength:]
 		b = b[:int64(len(b))-req.ContentLength]
 		buffer.Write(b)
+
 		if err := json.Indent(buffer, jsonRaw, "", "\t"); err != nil {
 			return nil, err
 		}
+
 		return buffer.Bytes(), nil
 	}
 

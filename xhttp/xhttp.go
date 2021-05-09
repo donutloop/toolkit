@@ -7,7 +7,7 @@ import (
 
 type Middleware func(m http.RoundTripper) http.RoundTripper
 
-// Use is wrapping up a RoundTripper with a set of middleware
+// Use is wrapping up a RoundTripper with a set of middleware.
 func Use(client *http.Client, middlewares ...Middleware) *http.Client {
 	if client == nil {
 		panic(errors.New("client is nil"))

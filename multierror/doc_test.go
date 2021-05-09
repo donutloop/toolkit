@@ -8,7 +8,7 @@ import (
 	"github.com/donutloop/toolkit/multierror"
 )
 
-func ExampleMultiError() {
+func Example() {
 	errs := []error{
 		errors.New("error connect to db failed"),
 		errors.New("error marschaling json"),

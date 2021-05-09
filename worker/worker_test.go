@@ -2,15 +2,16 @@ package worker_test
 
 import (
 	"fmt"
-	"github.com/donutloop/toolkit/worker"
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/donutloop/toolkit/worker"
 )
 
 func TestWorker(t *testing.T) {
 
-	containes := func(ls []string, s string) bool {
+	contains := func(ls []string, s string) bool {
 		for _, ss := range ls {
 			if ss == s {
 				return true
@@ -26,7 +27,7 @@ func TestWorker(t *testing.T) {
 			return false, fmt.Errorf("value is not a string got=%v", parameter)
 		}
 
-		if !containes([]string{"hello", "golang", "world"}, v) {
+		if !contains([]string{"hello", "golang", "world"}, v) {
 			t.Errorf("value is bad got=%v", parameter)
 		}
 

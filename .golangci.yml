@@ -1,0 +1,75 @@
+run:
+tests: false
+skip-dirs:
+  - examples
+  - vendor
+
+linters:
+  enable:
+    - bodyclose
+    - deadcode
+    - depguard
+    - dogsled
+    - dupl
+    - errcheck
+    - exhaustive
+    - funlen
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofmt
+    - goimports
+    - golint
+    - gomnd
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - interfacer
+    - lll
+    - misspell
+    - nakedret
+    - noctx
+    - nolintlint
+    - rowserrcheck
+    - scopelint
+    - staticcheck
+    - structcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - whitespace
+    - asciicheck
+    - gochecknoglobals
+    - gocognit
+    - godot
+    - godox
+    - goerr113
+    - maligned
+    - nestif
+    - prealloc
+    - testpackage
+    - wsl
+
+linters-settings:
+  # see all options at https://github.com/bombsimon/wsl/blob/master/doc/configuration.md
+  # Even the default values have been copied here to give us control and fine tunning on them
+  wsl:
+    strict-append: false
+    allow-assign-and-call: true
+    allow-assign-and-anything: false
+    allow-multiline-assign: true
+    force-case-trailing-whitespace: 0
+    allow-cuddle-declarations: false
+    allow-case-trailing-whitespace: false
+    allow-trailing-comment: false
+    enforce-err-cuddling: false
+
+issues:
+  exclude:
+    - '^singleCaseSwitch'

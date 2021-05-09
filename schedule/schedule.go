@@ -32,8 +32,7 @@ type Fifo struct {
 	done       chan struct{}
 }
 
-// NewFIFOScheduler returns a Scheduler that schedules jobs in FIFO
-// order sequentially
+// NewFIFOScheduler returns a Scheduler that schedules jobs in FIFO order sequentially.
 func NewFIFOScheduler() *Fifo {
 	f := &Fifo{
 		resume:       make(chan struct{}, 1),

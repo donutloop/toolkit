@@ -2,11 +2,12 @@ package concurrent_test
 
 import (
 	"fmt"
-	"github.com/donutloop/toolkit/concurrent"
 	"sync/atomic"
+
+	"github.com/donutloop/toolkit/concurrent"
 )
 
-// Run concurrently your func() error
+// Run concurrently your func() error.
 func ExampleRun() {
 
 	counter := int32(0)
@@ -23,7 +24,7 @@ func ExampleRun() {
 
 	if len(errs) > 0 {
 		for _, err := range errs {
-			fmt.Println(fmt.Sprintf("error: %v", err))
+			fmt.Printf("error: %v \n", err)
 		}
 	}
 

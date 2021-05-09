@@ -6,14 +6,14 @@ import (
 	"sync"
 )
 
-//The type of the function's first and only argument
-//declares the msg to listen for.
+// The type of the function's first and only argument.
+// declares the msg to listen for.
 type HandlerFunc interface{}
 
 type Msg interface{}
 
-//It is a simple but powerful publish-subscribe event system. It requires object to
-//register themselves with the event bus to receive events.
+// It is a simple but powerful publish-subscribe event system. It requires object to
+// register themselves with the event bus to receive events.
 type Bus interface {
 	Dispatch(msg Msg) error
 	AddHandler(handler HandlerFunc) error
@@ -34,14 +34,14 @@ func New() Bus {
 	}
 }
 
-//Dispatch sends an msg to registered handler that were declared
-//to accept values of a msg
+// Dispatch sends an msg to registered handler that were declared
+// to accept values of a msg
 func (b *InProcBus) Dispatch(msg Msg) error {
 	nameOfMsg := reflect.TypeOf(msg)
 
 	handler, ok := b.handlers[nameOfMsg.String()]
 	if !ok {
-		return fmt.Errorf("handler not found for %s", nameOfMsg)
+		return &HandlerNotFoundError{Name: nameOfMsg.Name()}
 	}
 
 	params := make([]reflect.Value, 0, 1)
@@ -55,8 +55,8 @@ func (b *InProcBus) Dispatch(msg Msg) error {
 	return nil
 }
 
-//Publish sends an msg to all registered listeners that were declared
-//to accept values of a msg
+// Publish sends an msg to all registered listeners that were declared
+// to accept values of a msg
 func (b *InProcBus) Publish(msg Msg) error {
 	nameOfMsg := reflect.TypeOf(msg)
 	listeners := b.listeners[nameOfMsg.String()]
@@ -74,8 +74,8 @@ func (b *InProcBus) Publish(msg Msg) error {
 	return nil
 }
 
-//AddHandler registers a handler function that will be called when a matching
-//msg is dispatched.
+// AddHandler registers a handler function that will be called when a matching
+// msg is dispatched.
 func (b *InProcBus) AddHandler(handler HandlerFunc) error {
 	b.Mutex.Lock()
 	defer b.Mutex.Unlock()
@@ -85,15 +85,15 @@ func (b *InProcBus) AddHandler(handler HandlerFunc) error {
 
 	typeOfMsg := handlerType.In(0)
 	if _, ok := b.handlers[typeOfMsg.String()]; ok {
-		return fmt.Errorf("handler exists for %s", typeOfMsg)
+		return &OverwriteHandlerError{Name: typeOfMsg.Name()}
 	}
 
 	b.handlers[typeOfMsg.String()] = reflect.ValueOf(handler)
 	return nil
 }
 
-//AddListener registers a listener function that will be called when a matching
-//msg is dispatched.
+// AddListener registers a listener function that will be called when a matching
+// msg is dispatched.
 func (b *InProcBus) AddEventListener(handler HandlerFunc) {
 	b.Mutex.Lock()
 	defer b.Mutex.Unlock()
@@ -109,7 +109,7 @@ func (b *InProcBus) AddEventListener(handler HandlerFunc) {
 	b.listeners[typOfMsg.String()] = append(b.listeners[typOfMsg.String()], reflect.ValueOf(handler))
 }
 
-//panic if conditions not met (this is a programming error)
+// panic if conditions not met (this is a programming error)
 func validateHandlerFunc(handlerType reflect.Type) {
 	switch {
 	case handlerType.Kind() != reflect.Func:
@@ -121,10 +121,22 @@ func validateHandlerFunc(handlerType reflect.Type) {
 	}
 }
 
-//BadFuncError is raised via panic() when AddEventListener or AddHandler is called with an
-//invalid listener function.
+// BadFuncError is raised via panic() when AddEventListener or AddHandler is called with an
+// invalid listener function.
 type BadFuncError string
 
 func (bhf BadFuncError) Error() string {
 	return fmt.Sprintf("bad handler func: %s", string(bhf))
 }
+
+type HandlerNotFoundError struct {
+	Name string
+}
+
+func (e *HandlerNotFoundError) Error() string { return e.Name + ": not found" }
+
+type OverwriteHandlerError struct {
+	Name string
+}
+
+func (e *OverwriteHandlerError) Error() string { return e.Name + ": handler exists" }

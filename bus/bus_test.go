@@ -3,8 +3,9 @@ package bus_test
 import (
 	"errors"
 	"fmt"
-	"github.com/donutloop/toolkit/bus"
 	"testing"
+
+	"github.com/donutloop/toolkit/bus"
 )
 
 type msg struct {
@@ -15,27 +16,32 @@ type msg struct {
 func TestHandlerReturnsError(t *testing.T) {
 	b := bus.New()
 
-	b.AddHandler(func(m *msg) error {
+	err := b.AddHandler(func(m *msg) error {
 		return errors.New("handler error")
 	})
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	err := b.Dispatch(new(msg))
+	err = b.Dispatch(new(msg))
 	if err == nil {
-		t.Fatalf("dispatch msg failed (%s)", err.Error())
+		t.Fatalf("dispatch msg failed (%v)", err)
 	}
 }
 
 func TestHandlerReturn(t *testing.T) {
 	b := bus.New()
 
-	b.AddHandler(func(m *msg) error {
+	err := b.AddHandler(func(m *msg) error {
 		m.body = "Hello, world!"
 		return nil
 	})
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	msg := new(msg)
-	err := b.Dispatch(msg)
-
+	err = b.Dispatch(msg)
 	if err != nil {
 		t.Fatalf("dispatch msg failed (%s)", err.Error())
 	}
@@ -80,9 +86,12 @@ func TestAddHandlerBadFunc(t *testing.T) {
 	}()
 
 	b := bus.New()
-	b.AddHandler(func(m *msg, s string) error {
+	err := b.AddHandler(func(m *msg, s string) error {
 		return nil
 	})
+	if err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestAddListenerBadFunc(t *testing.T) {
@@ -103,13 +112,13 @@ func TestAddListenerBadFunc(t *testing.T) {
 
 func BenchmarkHandlerRun(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		bus := bus.New()
+		bs := bus.New()
 
-		bus.AddHandler(func(m *msg) error {
+		bs.AddHandler(func(m *msg) error {
 			return nil
 		})
 
-		if err := bus.Dispatch(new(msg)); err != nil {
+		if err := bs.Dispatch(new(msg)); err != nil {
 			b.Fatal(err)
 		}
 	}
@@ -117,29 +126,29 @@ func BenchmarkHandlerRun(b *testing.B) {
 
 func BenchmarkListenerRun(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		bus := bus.New()
+		bs := bus.New()
 
-		bus.AddEventListener(func(m *msg) error {
+		bs.AddEventListener(func(m *msg) error {
 			return nil
 		})
 
-		bus.AddEventListener(func(m *msg) error {
+		bs.AddEventListener(func(m *msg) error {
 			return nil
 		})
 
-		bus.AddEventListener(func(m *msg) error {
+		bs.AddEventListener(func(m *msg) error {
 			return nil
 		})
 
-		bus.AddEventListener(func(m *msg) error {
+		bs.AddEventListener(func(m *msg) error {
 			return nil
 		})
 
-		bus.AddEventListener(func(m *msg) error {
+		bs.AddEventListener(func(m *msg) error {
 			return nil
 		})
 
-		if err := bus.Publish(new(msg)); err != nil {
+		if err := bs.Publish(new(msg)); err != nil {
 			b.Fatal(err)
 		}
 	}

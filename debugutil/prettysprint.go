@@ -32,35 +32,46 @@ func PrettySprint(v interface{}) string {
 	}
 
 	buff := bytes.Buffer{}
+
 	switch value.Kind() {
 	case reflect.Struct:
 		buff.WriteString(fullName(value.Type()) + bracketOpen)
+
 		for i := 0; i < value.NumField(); i++ {
 			l := string(value.Type().Field(i).Name[0])
 			if strings.ToUpper(l) == l {
 				buff.WriteString(fmt.Sprintf("%s: %s,\n", value.Type().Field(i).Name, PrettySprint(value.Field(i).Interface())))
 			}
 		}
+
 		buff.WriteString(bracketClose)
+
 		return buff.String()
 	case reflect.Map:
 		buff.WriteString("map[" + fullName(value.Type().Key()) + "]" + fullName(value.Type().Elem()) + bracketOpen)
+
 		for _, k := range value.MapKeys() {
 			buff.WriteString(fmt.Sprintf(`"%s":%s,\n`, k.String(), PrettySprint(value.MapIndex(k).Interface())))
 		}
+
 		buff.WriteString(bracketClose)
+
 		return buff.String()
 	case reflect.Ptr:
 		if e := value.Elem(); e.IsValid() {
 			return fmt.Sprintf("%s%s", pointerSign, PrettySprint(e.Interface()))
 		}
+
 		return nilSign
 	case reflect.Slice:
 		buff.WriteString("[]" + fullName(value.Type().Elem()) + bracketOpen)
+
 		for i := 0; i < value.Len(); i++ {
 			buff.WriteString(fmt.Sprintf("%s,\n", PrettySprint(value.Index(i).Interface())))
 		}
+
 		buff.WriteString(bracketClose)
+
 		return buff.String()
 	default:
 		return fmt.Sprintf("%#v", v)
@@ -70,6 +81,7 @@ func PrettySprint(v interface{}) string {
 func pkgName(t reflect.Type) string {
 	pkg := t.PkgPath()
 	c := strings.Split(pkg, "/")
+
 	return c[len(c)-1]
 }
 
@@ -77,5 +89,6 @@ func fullName(t reflect.Type) string {
 	if pkg := pkgName(t); pkg != "" {
 		return pkg + "." + t.Name()
 	}
+
 	return t.Name()
 }

@@ -3,6 +3,7 @@ package retry_test
 import (
 	"context"
 	"fmt"
+
 	"github.com/donutloop/toolkit/retry"
 )
 
@@ -14,7 +15,7 @@ func ExampleRetrier() {
 	})
 
 	if err != nil {
-		fmt.Println(fmt.Sprintf("error: (%v)", err))
+		fmt.Printf("error: (%v) \n", err)
 	}
 
 	// Output: fire request
