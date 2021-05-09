@@ -35,24 +35,23 @@ func NewRetrier(InitialIntervalInSeconds, maxIntervalInSeconds float64, tries ui
 
 	return &retrier{
 		InitialIntervalInSeconds: InitialIntervalInSeconds,
-		maxIntervalInSeconds: maxIntervalInSeconds,
-		strategy:        strategy,
-		tries:           tries,
+		maxIntervalInSeconds:     maxIntervalInSeconds,
+		strategy:                 strategy,
+		tries:                    tries,
 	}
 }
 
 // Retry supervised do funcs which automatically handle failures when they occur by performing retries.
 type retrier struct {
 	InitialIntervalInSeconds, maxIntervalInSeconds float64
-	strategy             Strategy
-	tries           uint
+	strategy                                       Strategy
+	tries                                          uint
 }
 
 func (r *retrier) Retry(ctx context.Context, do RetryableDo) error {
 	if ctx == nil {
 		ctx = context.Background()
 	}
-
 
 	var err error
 	var done bool
@@ -82,7 +81,7 @@ type Strategy interface {
 	Policy(intervalInSeconds, maxIntervalInSeconds float64) float64
 }
 
-type Exp struct {}
+type Exp struct{}
 
 func (e *Exp) Policy(intervalInSeconds, maxIntervalInSeconds float64) float64 {
 	time.Sleep(time.Duration(intervalInSeconds) * time.Second)

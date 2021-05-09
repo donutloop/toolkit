@@ -10,8 +10,8 @@ import (
 
 type TestMiddleware struct {
 	roundtripper http.RoundTripper
-	Log func(v ...interface{})
-	ID int
+	Log          func(v ...interface{})
+	ID           int
 }
 
 func (m *TestMiddleware) RoundTrip(req *http.Request) (*http.Response, error) {

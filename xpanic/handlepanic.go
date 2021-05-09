@@ -11,7 +11,7 @@ import (
 
 // If crashOnError is set a coredump will be produced and kill program else it continues.
 const (
-	CrashOnErrorActivated = true
+	CrashOnErrorActivated   = true
 	CrashOnErrorDeactivated = false
 )
 
