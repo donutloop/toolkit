@@ -13,16 +13,16 @@ func TestRoundTripper_RoundTripInternalServer(t *testing.T) {
 
 	var counter int32
 	testserver := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			atomic.AddInt32(&counter, 1)
-			t.Log("hit endpoint")
-			w.WriteHeader(http.StatusInternalServerError)
+		atomic.AddInt32(&counter, 1)
+		t.Log("hit endpoint")
+		w.WriteHeader(http.StatusInternalServerError)
 	}))
 
-	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, nil, new(Exp))
+	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50, .15, 3, nil, new(Exp))
 	httpClient := new(http.Client)
 	httpClient.Transport = retryRoundTripper
 
-	req, err := http.NewRequest(http.MethodGet, testserver.URL, nil )
+	req, err := http.NewRequest(http.MethodGet, testserver.URL, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -50,11 +50,11 @@ func TestRoundTripper_RoundTripInternalServerBlacklisted(t *testing.T) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 
-	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, []int{http.StatusInternalServerError}, new(Exp))
+	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50, .15, 3, []int{http.StatusInternalServerError}, new(Exp))
 	httpClient := new(http.Client)
 	httpClient.Transport = retryRoundTripper
 
-	req, err := http.NewRequest(http.MethodGet, testserver.URL, nil )
+	req, err := http.NewRequest(http.MethodGet, testserver.URL, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -82,11 +82,11 @@ func TestRoundTripper_RoundTripStatusOk(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
-	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, nil, new(Exp))
+	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50, .15, 3, nil, new(Exp))
 	httpClient := new(http.Client)
 	httpClient.Transport = retryRoundTripper
 
-	req, err := http.NewRequest(http.MethodGet, testserver.URL, nil )
+	req, err := http.NewRequest(http.MethodGet, testserver.URL, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -105,7 +105,6 @@ func TestRoundTripper_RoundTripStatusOk(t *testing.T) {
 	}
 }
 
-
 func TestRoundTripper_RoundTripJsonStatusOk(t *testing.T) {
 
 	json := `{"hello":"world"}`
@@ -115,7 +114,7 @@ func TestRoundTripper_RoundTripJsonStatusOk(t *testing.T) {
 		atomic.AddInt32(&counter, 1)
 		t.Log("hit endpoint")
 
-		b , err := ioutil.ReadAll(req.Body)
+		b, err := ioutil.ReadAll(req.Body)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -129,7 +128,6 @@ func TestRoundTripper_RoundTripJsonStatusOk(t *testing.T) {
 			return
 		}
 
-
 		if string(b) != json {
 			w.WriteHeader(http.StatusBadRequest)
 			return
@@ -139,7 +137,7 @@ func TestRoundTripper_RoundTripJsonStatusOk(t *testing.T) {
 		w.Write([]byte(json))
 	}))
 
-	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50 , .15 , 3, nil, new(Exp))
+	retryRoundTripper := NewRoundTripper(http.DefaultTransport, .50, .15, 3, nil, new(Exp))
 	httpClient := new(http.Client)
 	httpClient.Transport = retryRoundTripper
 
@@ -161,7 +159,7 @@ func TestRoundTripper_RoundTripJsonStatusOk(t *testing.T) {
 		t.Errorf("counter is bad, got=%v, want=%v", counter, 1)
 	}
 
-	b , err := ioutil.ReadAll(resp.Body)
+	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("response is bad, got=%v", err)
 	}

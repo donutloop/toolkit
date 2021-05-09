@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-
 // PrettyPrintResponse is pretty printing a http response
 func PrettySprintResponse(resp *http.Response) (string, error) {
 	dump, err := PrettyDumpResponse(resp, true)

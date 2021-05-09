@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-type logger struct {}
+type logger struct{}
 
 func (l logger) Errorf(format string, v ...interface{}) {
 	log.Println(fmt.Sprintf(format, v...))
@@ -42,4 +42,3 @@ func TestLogRoundTripper_RoundTrip(t *testing.T) {
 		t.Fatal("response is bad, got: $v, want: $v", response.StatusCode, http.StatusOK)
 	}
 }
-

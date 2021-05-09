@@ -6,8 +6,8 @@ import (
 )
 
 type RoundTripper struct {
-	retrier Retrier
-	next http.RoundTripper
+	retrier              Retrier
+	next                 http.RoundTripper
 	blacklistStatusCodes []int
 }
 
@@ -15,8 +15,8 @@ type RoundTripper struct {
 func NewRoundTripper(next http.RoundTripper, maxInterval, initialInterval float64, tries uint, blacklistStatusCodes []int, strategy Strategy) *RoundTripper {
 	retrier := NewRetrier(initialInterval, maxInterval, tries, strategy)
 	return &RoundTripper{
-		retrier:retrier,
-		next: next,
+		retrier:              retrier,
+		next:                 next,
 		blacklistStatusCodes: blacklistStatusCodes,
 	}
 }
@@ -39,10 +39,10 @@ func (rt *RoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 			return false, nil
 		}
 
-		return true , nil
+		return true, nil
 	})
 
-	if _, ok := err.(*ExhaustedError); ok  {
+	if _, ok := err.(*ExhaustedError); ok {
 		return resp, nil
 	}
 

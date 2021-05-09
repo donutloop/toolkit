@@ -13,6 +13,7 @@ type ConstructorFunc func() (interface{}, error)
 
 type Singleton interface {
 	Get() (interface{}, error)
+	Reset()
 }
 
 // Call to create a new singleton that is instantiated with the given constructor function.
@@ -33,6 +34,7 @@ type singleton struct {
 	done uint32
 }
 
+// todo(marcel): Rename to GetOrCreate (major break)
 func (s *singleton) Get() (interface{}, error) {
 	if atomic.LoadUint32(&s.done) == 1 {
 		return s.object, nil
@@ -50,4 +52,11 @@ func (s *singleton) Get() (interface{}, error) {
 	}
 
 	return s.object, nil
+}
+
+// Reset indicates that the next call of Get should actually a create instance
+func (s *singleton) Reset() {
+	s.m.Lock()
+	defer s.m.Unlock()
+	atomic.StoreUint32(&s.done, 0)
 }

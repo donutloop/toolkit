@@ -12,7 +12,7 @@ type logger interface {
 
 type LogRoundTripper struct {
 	http.RoundTripper
-	logger logger
+	logger   logger
 	dumpBody bool
 }
 
@@ -40,7 +40,7 @@ func (tr LogRoundTripper) RoundTrip(req *http.Request) (res *http.Response, err 
 		if err != nil {
 			tr.logger.Errorf("could not dump response: %v", err)
 		} else {
-			tr.logger.Infof( "------------  HTTP RESPONSE ----------\n%s", responseDump)
+			tr.logger.Infof("------------  HTTP RESPONSE ----------\n%s", responseDump)
 		}
 	}
 
