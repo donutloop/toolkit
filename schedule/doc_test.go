@@ -3,10 +3,11 @@ package schedule_test
 import (
 	"context"
 	"fmt"
+
 	"github.com/donutloop/toolkit/schedule"
 )
 
-func ExampleFIFOScheduler() {
+func Example() {
 
 	s := schedule.NewFIFOScheduler()
 	defer s.Stop()
@@ -16,7 +17,7 @@ func ExampleFIFOScheduler() {
 	}
 
 	if err := s.Schedule(job); err != nil {
-		fmt.Println(fmt.Sprintf("error: (%v)", err))
+		fmt.Printf("error: (%v) \n", err)
 	}
 
 	s.WaitFinish(1)

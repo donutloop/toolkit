@@ -3,10 +3,11 @@ package xpanic_test
 import (
 	"bytes"
 	"fmt"
-	"github.com/donutloop/toolkit/xpanic"
 	"runtime"
 	"sync"
 	"testing"
+
+	"github.com/donutloop/toolkit/xpanic"
 )
 
 func TestHandlePanic(t *testing.T) {

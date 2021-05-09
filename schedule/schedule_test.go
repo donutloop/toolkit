@@ -32,7 +32,10 @@ func TestFIFOSchedule(t *testing.T) {
 	}
 
 	for _, j := range jobs {
-		s.Schedule(j)
+		err := s.Schedule(j)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	s.WaitFinish(100)
@@ -45,7 +48,7 @@ func TestFIFOSchedule(t *testing.T) {
 func TestFIFOScheduleCtx(t *testing.T) {
 	s := schedule.NewFIFOScheduler()
 
-	s.Schedule(func(ctx context.Context) {
+	err := s.Schedule(func(ctx context.Context) {
 		<-time.After(250 * time.Millisecond)
 		err := ctx.Err()
 		if err == nil {
@@ -57,6 +60,10 @@ func TestFIFOScheduleCtx(t *testing.T) {
 			t.Fatal(err)
 		}
 	})
+
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	s.Stop()
 
@@ -81,8 +88,8 @@ func BenchmarkFIFOSchedule(b *testing.B) {
 
 		for _, j := range jobs {
 			if err := s.Schedule(j); err != nil {
-				b.Fatal(err)
 				s.Stop()
+				b.Fatal(err)
 			}
 		}
 
@@ -90,8 +97,8 @@ func BenchmarkFIFOSchedule(b *testing.B) {
 
 		expectedJobCount := 100
 		if s.Scheduled() != expectedJobCount {
-			b.Fatalf("scheduled (actual: %d, expected: %d)", s.Scheduled(), expectedJobCount)
 			s.Stop()
+			b.Fatalf("scheduled (actual: %d, expected: %d)", s.Scheduled(), expectedJobCount)
 		}
 		s.Stop()
 	}

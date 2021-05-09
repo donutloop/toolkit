@@ -2,9 +2,10 @@ package concurrent_test
 
 import (
 	"errors"
-	"github.com/donutloop/toolkit/concurrent"
 	"sync/atomic"
 	"testing"
+
+	"github.com/donutloop/toolkit/concurrent"
 )
 
 func TestRun(t *testing.T) {

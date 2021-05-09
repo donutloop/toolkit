@@ -14,6 +14,12 @@ fmt:
 vet:
 	go vet $(ALL_PACKAGES)
 
+goimports:
+	goimports -w $(shell find . -type f -name '*.go' -not -path "./vendor/*")
+
+gofmts:
+	gofmt -s -w  $(shell find . -type f -name '*.go' -not -path "./vendor/*")
+
 lint:
 	@for p in $(ALL_PACKAGES); do \
 		echo "==> Linting $$p"; \

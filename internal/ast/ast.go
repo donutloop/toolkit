@@ -3,13 +3,14 @@ package ast
 import (
 	"bytes"
 	"fmt"
-	"github.com/fatih/astrewrite"
 	"go/ast"
 	"go/format"
 	"go/parser"
 	"go/token"
 	"log"
 	"strings"
+
+	"github.com/fatih/astrewrite"
 )
 
 const (

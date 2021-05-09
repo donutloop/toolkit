@@ -15,7 +15,7 @@ const (
 	CrashOnErrorDeactivated = false
 )
 
-// BuildPanicHandler builds a panic handler and verifies a none nil logger got passed
+// BuildPanicHandler builds a panic handler and verifies a none nil logger got passed.
 func BuildPanicHandler(errorf func(format string, args ...interface{}), crashOnError bool) func() {
 	if errorf == nil {
 		panic("errorf is not set")
@@ -32,7 +32,10 @@ func BuildPanicHandler(errorf func(format string, args ...interface{}), crashOnE
 			if crashOnError {
 				signal.Reset(syscall.SIGABRT)
 				errorf("finished capturing of panic infos")
-				syscall.Kill(0, syscall.SIGABRT)
+				err := syscall.Kill(0, syscall.SIGABRT)
+				if err != nil {
+					errorf("syscall.Kill failed: %v", err)
+				}
 			} else {
 				errorf("finished capturing of panic infos")
 			}

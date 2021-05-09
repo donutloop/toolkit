@@ -55,6 +55,7 @@ func Test(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
+		test := test
 		t.Run(test.name, func(t *testing.T) {
 			output := debugutil.PrettySprint(test.input)
 			if output != test.output {

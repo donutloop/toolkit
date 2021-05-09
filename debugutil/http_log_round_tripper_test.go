@@ -1,12 +1,14 @@
 package debugutil_test
 
 import (
+	"context"
 	"fmt"
-	"github.com/donutloop/toolkit/debugutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/donutloop/toolkit/debugutil"
 )
 
 type logger struct{}
@@ -25,13 +27,19 @@ func TestLogRoundTripper_RoundTrip(t *testing.T) {
 	}
 
 	testHandler := http.HandlerFunc(handler)
+
 	server := httptest.NewServer(testHandler)
 	defer server.Close()
 
 	httpClient := new(http.Client)
 	httpClient.Transport = debugutil.NewLogRoundTripper(http.DefaultTransport, logger{}, true)
 
-	response, err := httpClient.Get(server.URL)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, server.URL, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	response, err := httpClient.Do(req)
 	if err != nil {
 		t.Fatalf("could not create request: %v", err)
 	}

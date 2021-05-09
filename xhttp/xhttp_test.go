@@ -1,11 +1,12 @@
 package xhttp_test
 
 import (
-	"github.com/donutloop/toolkit/xhttp"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/donutloop/toolkit/xhttp"
 )
 
 type TestMiddleware struct {

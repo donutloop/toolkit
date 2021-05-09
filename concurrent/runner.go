@@ -2,11 +2,19 @@ package concurrent
 
 import (
 	"fmt"
+	"runtime/debug"
 	"sync"
 )
 
+type RecoverError struct {
+	Err   interface{}
+	Stack []byte
+}
+
+func (e *RecoverError) Error() string { return fmt.Sprintf("Do panicked: %v", e.Err) }
+
 // Run executes the provided functions in concurrent and collects any errors they return.
-// Be careful about your resource consumption
+// Be careful about your resource consumption.
 func Run(fns ...func() error) []error {
 	wg := sync.WaitGroup{}
 	errc := make(chan error, len(fns))
@@ -16,7 +24,7 @@ func Run(fns ...func() error) []error {
 			defer func() {
 
 				if v := recover(); v != nil {
-					errc <- fmt.Errorf("do is panicked (%v)", v)
+					errc <- &RecoverError{Err: v, Stack: debug.Stack()}
 				}
 
 				wg.Done()

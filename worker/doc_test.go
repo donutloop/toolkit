@@ -2,11 +2,12 @@ package worker_test
 
 import (
 	"fmt"
-	"github.com/donutloop/toolkit/worker"
 	"time"
+
+	"github.com/donutloop/toolkit/worker"
 )
 
-func ExampleWorker() {
+func Example() {
 	workerHandler := func(parameter interface{}) (interface{}, error) {
 		v := parameter.(string)
 		return v + " world", nil

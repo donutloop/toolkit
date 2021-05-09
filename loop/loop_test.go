@@ -7,9 +7,10 @@ package loop_test
 import (
 	"errors"
 	"fmt"
-	"github.com/donutloop/toolkit/loop"
 	"testing"
 	"time"
+
+	"github.com/donutloop/toolkit/loop"
 )
 
 func TestLoop(t *testing.T) {

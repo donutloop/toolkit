@@ -3,9 +3,11 @@ package debugutil_test
 import (
 	"bufio"
 	"bytes"
-	"github.com/donutloop/toolkit/debugutil"
+	"context"
 	"net/http"
 	"testing"
+
+	"github.com/donutloop/toolkit/debugutil"
 )
 
 func TestPrettyDumpResponse(t *testing.T) {
@@ -30,7 +32,8 @@ X-Xss-Protection: 1; mode=block
 {"data": {"partner": {"verified_data": {"people": [{"identity_document_checks": [{"status": "passed", "file_links": [{"file_type": "photo", "link": "https://static.iwoca.com/assets/iwoca.4c17fef7de62.png"}], "check_id": "REFERENCE_0001", "datetime": "2017-06-12T14:05:51.666Z", "identity_document_type": "passport", "document_issuing_country": "gb", "provider_name": "test"}], "uid": "6cf7319e-f9ec-4038-ba4f-3561a6097484"}]}}, "state_key": "8e4db383-2ead-4a47-87df-220432714c47", "schema_version": "v1", "application": {"company": {"last_12_months_turnover": {"amount": 700000, "datetime": "2016-10-12T14:05:51.666Z"}, "type": "gmbh", "company_number": "01111112", "bank_details": {"iban": "DE89370400440532013000"}}, "requested_products": {"credit_facility": {"approval": {"amount": 15000}}}, "people": [{"residential_addresses": [{"town": "Ely", "uid": "cf9aa203-4e0c-4d7f-b42b-90c7b3d193d3", "house_number": "286", "date_from": "2014-02-03", "street_line_1": "Idverifier St", "postcode": "CB62AG"}], "last_name": "Norton", "uid": "6cf7319e-f9ec-4038-ba4f-3561a6097484", "roles": ["applicant", "shareholder", "guarantor", "director"], "title": "herr", "first_name": "Ervin", "privacy_policy": {"agreed": true, "datetime": "2016-10-12T14:05:51.666Z"}, "date_of_birth": "1980-01-01"}]}}}
 `)
 	reader := bufio.NewReader(bytes.NewReader(r))
-	req, err := http.NewRequest(http.MethodGet, "/api/resource", nil)
+
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, "/api/resource", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -39,6 +42,8 @@ X-Xss-Protection: 1; mode=block
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	defer resp.Body.Close()
 
 	s, err := debugutil.PrettySprintResponse(resp)
 	if err != nil {
@@ -52,7 +57,7 @@ func TestPrettyDumpRequest(t *testing.T) {
 
 	b := []byte(`{"data": {"partner": {"verified_data": {"people": [{"identity_document_checks": [{"status": "passed", "file_links": [{"file_type": "photo", "link": "https://static.iwoca.com/assets/iwoca.4c17fef7de62.png"}], "check_id": "REFERENCE_0001", "datetime": "2017-06-12T14:05:51.666Z", "identity_document_type": "passport", "document_issuing_country": "gb", "provider_name": "test"}], "uid": "6cf7319e-f9ec-4038-ba4f-3561a6097484"}]}}, "state_key": "8e4db383-2ead-4a47-87df-220432714c47", "schema_version": "v1", "application": {"company": {"last_12_months_turnover": {"amount": 700000, "datetime": "2016-10-12T14:05:51.666Z"}, "type": "gmbh", "company_number": "01111112", "bank_details": {"iban": "DE89370400440532013000"}}, "requested_products": {"credit_facility": {"approval": {"amount": 15000}}}, "people": [{"residential_addresses": [{"town": "Ely", "uid": "cf9aa203-4e0c-4d7f-b42b-90c7b3d193d3", "house_number": "286", "date_from": "2014-02-03", "street_line_1": "Idverifier St", "postcode": "CB62AG"}], "last_name": "Norton", "uid": "6cf7319e-f9ec-4038-ba4f-3561a6097484", "roles": ["applicant", "shareholder", "guarantor", "director"], "title": "herr", "first_name": "Ervin", "privacy_policy": {"agreed": true, "datetime": "2016-10-12T14:05:51.666Z"}, "date_of_birth": "1980-01-01"}]}}}`)
 
-	req, err := http.NewRequest(http.MethodGet, "/api/resource", bytes.NewReader(b))
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, "/api/resource", bytes.NewReader(b))
 	if err != nil {
 		t.Fatal(err)
 	}

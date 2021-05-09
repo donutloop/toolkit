@@ -1,8 +1,9 @@
 package event_test
 
 import (
-	"github.com/donutloop/toolkit/event"
 	"testing"
+
+	"github.com/donutloop/toolkit/event"
 )
 
 func TestHooksMultiFire(t *testing.T) {
