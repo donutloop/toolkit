@@ -37,7 +37,7 @@ func ChangeType(typeName string, newType string, debugMode string) func(file *as
 				for i := 0; i < len(x.Args); i++ {
 					v, ok := x.Args[i].(*ast.Ident)
 					if ok {
-						if strings.ToLower(typeName) == strings.ToLower(v.Name) {
+						if strings.EqualFold(typeName, v.Name) {
 							x.Args[i] = &ast.Ident{Name: fmt.Sprintf("%s.(%s)", v.Name, newType)}
 						}
 					}
@@ -73,8 +73,16 @@ func ModifyAst(dest []byte, fns ...func(*ast.File) *ast.File) ([]byte, error) {
 
 	var buf bytes.Buffer
 	if err := format.Node(&buf, destFset, destF); err != nil {
-		return nil, fmt.Errorf("couldn't format package code (%v)", err)
+		return nil, &BadFormattedCode{Err: err}
 	}
 
 	return buf.Bytes(), nil
+}
+
+type BadFormattedCode struct {
+	Err error
+}
+
+func (e BadFormattedCode) Error() string {
+	return fmt.Sprintf("couldn't format package code (%v)", e.Err)
 }

@@ -15,6 +15,7 @@ func main() {
 	log.SetFlags(0)
 
 	fs := flag.NewFlagSet("xcode", flag.ExitOnError)
+
 	var (
 		in   = fs.String("in", "", "input file")
 		out  = fs.String("out", "", "output file")
@@ -22,8 +23,13 @@ func main() {
 		typ  = fs.String("type", "", "type")
 		mode = fs.String("mode", "", "activate mode")
 	)
+
 	fs.Usage = usageFor(fs, "xcode [flags]")
-	fs.Parse(os.Args[1:])
+
+	err := fs.Parse(os.Args[1:])
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if *in == "" {
 		log.Fatal("input file is missing")
@@ -61,11 +67,14 @@ func main() {
 
 func usageFor(fs *flag.FlagSet, short string) func() {
 	return func() {
+
 		fmt.Fprintf(os.Stdout, "USAGE\n")
 		fmt.Fprintf(os.Stdout, "  %s\n", short)
 		fmt.Fprintf(os.Stdout, "\n")
 		fmt.Fprintf(os.Stdout, "FLAGS\n")
+
 		tw := tabwriter.NewWriter(os.Stdout, 0, 2, 2, ' ', 0)
+
 		fs.VisitAll(func(f *flag.Flag) {
 			if f.Name == "debug" {
 				return
@@ -76,6 +85,7 @@ func usageFor(fs *flag.FlagSet, short string) func() {
 			}
 			fmt.Fprintf(tw, "  -%s %s\t%s\n", f.Name, f.DefValue, f.Usage)
 		})
+
 		tw.Flush()
 	}
 }

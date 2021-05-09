@@ -16,6 +16,7 @@ type logger struct{}
 func (l logger) Errorf(format string, v ...interface{}) {
 	log.Println(fmt.Sprintf(format, v...))
 }
+
 func (l logger) Infof(format string, v ...interface{}) {
 	log.Println(fmt.Sprintf(format, v...))
 }

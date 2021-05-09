@@ -3,16 +3,14 @@ package multierror_test
 import (
 	"fmt"
 
-	"errors"
-
 	"github.com/donutloop/toolkit/multierror"
 )
 
 func Example() {
 	errs := []error{
-		errors.New("error connect to db failed"),
-		errors.New("error marschaling json"),
+		connectionError,
+		marshalError,
 	}
 	fmt.Println(multierror.New(errs...))
-	// Output: multiple errors: error connect to db failed; error marschaling json
+	// Output: multiple errors: error connect to db failed; error marshal json
 }

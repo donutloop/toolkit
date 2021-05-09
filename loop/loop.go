@@ -6,6 +6,7 @@ package loop
 
 import (
 	"fmt"
+	"runtime/debug"
 	"time"
 )
 
@@ -41,7 +42,7 @@ func (l *looper) doLoop() {
 	defer ticker.Stop()
 	defer func() {
 		if v := recover(); v != nil {
-			l.err <- fmt.Errorf("event is panicked (%v)", v)
+			l.err <- &RecoverError{Err: v, Stack: debug.Stack()}
 		}
 	}()
 
@@ -57,3 +58,10 @@ func (l *looper) doLoop() {
 		}
 	}
 }
+
+type RecoverError struct {
+	Err   interface{}
+	Stack []byte
+}
+
+func (e *RecoverError) Error() string { return fmt.Sprintf("Do panicked: %v", e.Err) }

@@ -1,6 +1,7 @@
 package xhttp_test
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -16,19 +17,22 @@ type TestMiddleware struct {
 }
 
 func (m *TestMiddleware) RoundTrip(req *http.Request) (*http.Response, error) {
-	m.Log("hitted middleware ", m.ID)
+	m.Log("hit middleware ", m.ID)
+
 	resp, err := m.roundtripper.RoundTrip(req)
 	if err != nil {
 		return resp, nil
 	}
+
 	return resp, nil
 }
 
-func TestInjectMiddlware(t *testing.T) {
+func TestInjectMiddleware(t *testing.T) {
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
-		log.Println("hitted handler")
+		log.Println("hit handler")
 	}
+
 	s := httptest.NewServer(http.HandlerFunc(handler))
 	defer s.Close()
 
@@ -47,10 +51,13 @@ func TestInjectMiddlware(t *testing.T) {
 	httpClient := new(http.Client)
 	httpClient = xhttp.Use(httpClient, m1, m2)
 	httpClient = xhttp.Use(httpClient, m3)
+
 	resp, err := httpClient.Get(s.URL)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		log.Fatal(err)
@@ -61,7 +68,8 @@ func TestPanicNilClient(t *testing.T) {
 	defer func() {
 		v := recover()
 		err := v.(error)
-		if err.Error() != "client is nil" {
+
+		if !errors.Is(err, xhttp.ClientNilError) {
 			t.Errorf("error message is bad (%v)", v)
 		}
 	}()
@@ -73,7 +81,8 @@ func TestPanicNilMiddleware(t *testing.T) {
 	defer func() {
 		v := recover()
 		err := v.(error)
-		if err.Error() != "middleware is nil" {
+
+		if !errors.Is(err, xhttp.MiddlewareNilError)  {
 			t.Errorf("error message is bad (%v)", v)
 		}
 	}()
@@ -83,9 +92,11 @@ func TestPanicNilMiddleware(t *testing.T) {
 
 func TestPanicNilMiddlewares(t *testing.T) {
 	defer func() {
+
 		v := recover()
 		err := v.(error)
-		if err.Error() != "middlewares is nil" {
+
+		if !errors.Is(err, xhttp.MiddlewaresNilError) {
 			t.Errorf("error message is bad (%v)", v)
 		}
 	}()

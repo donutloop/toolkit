@@ -43,11 +43,14 @@ func (s *singleton) Get() (interface{}, error) {
 	s.m.Lock()
 	defer s.m.Unlock()
 	if s.done == 0 {
+
 		var err error
+
 		s.object, err = s.Constructor()
 		if err != nil {
 			return nil, err
 		}
+
 		defer atomic.StoreUint32(&s.done, 1)
 	}
 

@@ -10,7 +10,7 @@ import (
 func ExampleLeaser_Lease() {
 
 	leaser := lease.NewLeaser()
-	leaser.Lease("cleanup-cache", time.Duration(1*time.Second), func() {
+	leaser.Lease("cleanup-cache", 1*time.Second, func() {
 		fmt.Println("cleaned up cache")
 	})
 

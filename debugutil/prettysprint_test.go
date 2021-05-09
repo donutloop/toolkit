@@ -5,12 +5,11 @@
 package debugutil_test
 
 import (
-	"testing"
-
 	"github.com/donutloop/toolkit/debugutil"
+	"testing"
 )
 
-func Test(t *testing.T) {
+func TestDebugger(t *testing.T){
 
 	strings := "dummy"
 

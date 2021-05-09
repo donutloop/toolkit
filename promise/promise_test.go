@@ -7,7 +7,6 @@ package promise_test
 import (
 	"context"
 	"errors"
-	"strings"
 	"testing"
 	"time"
 
@@ -29,8 +28,9 @@ func TestDoPanic(t *testing.T) {
 			t.Fatal("unexpected nil error")
 		}
 
-		if !strings.Contains(err.Error(), "Do panicked") {
-			t.Fatalf(`unexpected error message (actual: "%s", expected: "promise is panicked (*)")`, err.Error())
+		expectedError := "Do panicked: check isolation of goroutine"
+		if expectedError != err.Error() {
+			t.Fatalf(`unexpected error message (actual: "%s", expected: "%v")`, err.Error(), expectedError)
 		}
 	}
 }
