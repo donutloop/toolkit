@@ -9,17 +9,17 @@ import (
 )
 
 type msg struct {
-	Id   int64
+	ID   int64
 	body string
 }
 
-var handlerError error = errors.New("handler error")
+var Errhandler error = errors.New("handler error")
 
 func TestHandlerReturnsError(t *testing.T) {
 	b := bus.New()
 
 	err := b.AddHandler(func(m *msg) error {
-		return handlerError
+		return Errhandler
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -43,6 +43,7 @@ func TestHandlerReturn(t *testing.T) {
 	}
 
 	msg := new(msg)
+
 	err = b.Dispatch(msg)
 	if err != nil {
 		t.Fatalf("dispatch msg failed (%s)", err.Error())
@@ -58,7 +59,7 @@ func TestEventListeners(t *testing.T) {
 	count := 0
 
 	b.AddEventListener(func(m *msg) error {
-		count += 1
+		count++
 		return nil
 	})
 
@@ -80,7 +81,7 @@ func TestEventListeners(t *testing.T) {
 func TestAddHandlerBadFunc(t *testing.T) {
 	defer func() {
 		if v := recover(); v != nil {
-			_, ok := v.(bus.BadFuncError)
+			_, ok := v.(bus.ErrBadFuncError)
 			if !ok {
 				t.Fatalf("unexpected object (%v)", v)
 			}
@@ -88,6 +89,7 @@ func TestAddHandlerBadFunc(t *testing.T) {
 	}()
 
 	b := bus.New()
+
 	err := b.AddHandler(func(m *msg, s string) error {
 		return nil
 	})
@@ -99,7 +101,7 @@ func TestAddHandlerBadFunc(t *testing.T) {
 func TestAddListenerBadFunc(t *testing.T) {
 	defer func() {
 		if v := recover(); v != nil {
-			_, ok := v.(bus.BadFuncError)
+			_, ok := v.(bus.ErrBadFuncError)
 			if !ok {
 				t.Fatalf("unexpected object (%v)", v)
 			}
@@ -116,7 +118,7 @@ func BenchmarkHandlerRun(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		bs := bus.New()
 
-		bs.AddHandler(func(m *msg) error {
+		_ = bs.AddHandler(func(m *msg) error {
 			return nil
 		})
 

@@ -28,7 +28,6 @@ linters:
     - govet
     - ineffassign
     - interfacer
-    - lll
     - misspell
     - nakedret
     - noctx
@@ -43,9 +42,7 @@ linters:
     - unparam
     - unused
     - varcheck
-    - whitespace
     - asciicheck
-    - gochecknoglobals
     - gocognit
     - godot
     - godox
@@ -55,6 +52,10 @@ linters:
     - prealloc
     - testpackage
     - wsl
+    # disabled modules
+    # - gochecknoglobals
+    # - whitespace
+    # - lll
 
 linters-settings:
   # see all options at https://github.com/bombsimon/wsl/blob/master/doc/configuration.md

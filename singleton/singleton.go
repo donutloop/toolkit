@@ -34,7 +34,7 @@ type singleton struct {
 	done uint32
 }
 
-// todo(marcel): Rename to GetOrCreate (major break)
+// todo(marcel): Rename to GetOrCreate (major break).
 func (s *singleton) Get() (interface{}, error) {
 	if atomic.LoadUint32(&s.done) == 1 {
 		return s.object, nil
@@ -42,8 +42,8 @@ func (s *singleton) Get() (interface{}, error) {
 
 	s.m.Lock()
 	defer s.m.Unlock()
-	if s.done == 0 {
 
+	if s.done == 0 {
 		var err error
 
 		s.object, err = s.Constructor()

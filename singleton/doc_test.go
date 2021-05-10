@@ -7,7 +7,6 @@ import (
 )
 
 func ExampleSingleton() {
-
 	type config struct {
 		Addr string
 		Port int
@@ -22,9 +21,10 @@ func ExampleSingleton() {
 		if err != nil {
 			return nil, err
 		}
+
 		return s.(*config), nil
 	}
-	
+
 	c, err := configFunc()
 	if err != nil {
 		fmt.Printf("error: (%v) \n", err)

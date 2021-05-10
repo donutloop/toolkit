@@ -22,7 +22,6 @@ func (l logger) Infof(format string, v ...interface{}) {
 }
 
 func TestLogRoundTripper_RoundTrip(t *testing.T) {
-
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}

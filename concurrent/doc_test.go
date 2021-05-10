@@ -9,7 +9,6 @@ import (
 
 // Run concurrently your func() error.
 func ExampleRun() {
-
 	counter := int32(0)
 	errs := concurrent.Run(
 		func() error {

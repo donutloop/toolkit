@@ -14,26 +14,26 @@ import (
 
 func TestResponseCodes(t *testing.T) {
 	tests := []struct {
-		name string
+		name         string
 		responseCode int
-		blacklisted []int
-		counter uint
+		blacklisted  []int
+		counter      uint
 	}{
 		{
-			name: "StatusCode",
+			name:         "StatusCode",
 			responseCode: http.StatusOK,
-			counter: 1,
+			counter:      1,
 		},
 		{
-			name: "StatusCode",
+			name:         "StatusCode",
 			responseCode: http.StatusInternalServerError,
-			counter: 3,
+			counter:      3,
 		},
 		{
-			name: "blacklisted",
+			name:         "blacklisted",
 			responseCode: http.StatusInternalServerError,
-			blacklisted: []int{http.StatusInternalServerError},
-			counter: 1,
+			blacklisted:  []int{http.StatusInternalServerError},
+			counter:      1,
 		},
 	}
 	for _, test := range tests {
@@ -74,8 +74,7 @@ func TestResponseCodes(t *testing.T) {
 	}
 }
 
-
-func TestRoundTripper_Json(t *testing.T) {
+func TestRT_JsonStatusOK(t *testing.T) {
 
 	json := `{"hello":"world"}`
 

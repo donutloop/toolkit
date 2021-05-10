@@ -10,34 +10,36 @@ import (
 	"time"
 )
 
-func NewLooper(rate time.Duration, event func() error) *looper {
-	l := &looper{
+func NewLooper(rate time.Duration, event func() error) *Looper {
+	l := &Looper{
 		event:    event,
 		rate:     rate,
 		shutdown: make(chan struct{}),
 		err:      make(chan error),
 	}
+
 	go l.doLoop()
+
 	return l
 }
 
-type looper struct {
+type Looper struct {
 	event    func() error
 	rate     time.Duration
 	shutdown chan struct{}
 	err      chan error
 }
 
-func (l *looper) Stop() {
+func (l *Looper) Stop() {
 	close(l.shutdown)
 	close(l.err)
 }
 
-func (l *looper) Error() <-chan error {
+func (l *Looper) Error() <-chan error {
 	return l.err
 }
 
-func (l *looper) doLoop() {
+func (l *Looper) doLoop() {
 	ticker := time.NewTicker(l.rate)
 	defer ticker.Stop()
 	defer func() {

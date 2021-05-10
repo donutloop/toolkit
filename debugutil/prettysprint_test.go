@@ -5,12 +5,12 @@
 package debugutil_test
 
 import (
-	"github.com/donutloop/toolkit/debugutil"
 	"testing"
+
+	"github.com/donutloop/toolkit/debugutil"
 )
 
-func TestDebugger(t *testing.T){
-
+func TestDebugger(t *testing.T) {
 	strings := "dummy"
 
 	var nilSlice []string = nil

@@ -18,13 +18,13 @@ func (v *BadValueError) Error() string {
 }
 
 func TestWorker(t *testing.T) {
-
 	contains := func(ls []string, s string) bool {
 		for _, ss := range ls {
 			if ss == s {
 				return true
 			}
 		}
+
 		return false
 	}
 
@@ -41,6 +41,7 @@ func TestWorker(t *testing.T) {
 
 		t.Logf("value: %v", v)
 		atomic.AddInt32(&counter, 1)
+
 		return true, nil
 	}
 

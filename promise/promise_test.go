@@ -13,10 +13,9 @@ import (
 	"github.com/donutloop/toolkit/promise"
 )
 
-var stubError error = errors.New("stub")
+var ErrStub error = errors.New("stub")
 
 func TestDoPanic(t *testing.T) {
-
 	done, errc := promise.Do(context.Background(), func(ctx context.Context) error {
 		panic("check isolation of goroutine")
 	})
@@ -36,9 +35,8 @@ func TestDoPanic(t *testing.T) {
 }
 
 func TestDoFail(t *testing.T) {
-
 	done, errc := promise.Do(context.Background(), func(ctx context.Context) error {
-		return stubError
+		return ErrStub
 	})
 
 	select {
@@ -56,7 +54,6 @@ func TestDoFail(t *testing.T) {
 }
 
 func TestDo(t *testing.T) {
-
 	done, errc := promise.Do(context.Background(), func(ctx context.Context) error {
 		<-time.After(1 * time.Second)
 		return nil
@@ -73,7 +70,6 @@ func TestDo(t *testing.T) {
 
 func BenchmarkDo(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-
 		done, errc := promise.Do(context.Background(), func(ctx context.Context) error { return nil })
 
 		select {

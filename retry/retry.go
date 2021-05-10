@@ -24,7 +24,6 @@ type Retrier interface {
 type RetryableDo func() (bool, error)
 
 func NewRetrier(initialIntervalInSeconds, maxIntervalInSeconds float64, tries uint, strategy Strategy) Retrier {
-
 	if strategy == nil {
 		panic("strategy is missing")
 	}
@@ -58,7 +57,6 @@ func (r *retrier) Retry(ctx context.Context, do RetryableDo) error {
 	var done bool
 
 	for i := uint(0); !done && i < r.tries; i++ {
-
 		done, err = do()
 
 		if ctx.Err() != nil {

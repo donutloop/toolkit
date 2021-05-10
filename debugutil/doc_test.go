@@ -7,7 +7,6 @@ import (
 )
 
 func ExamplePrettySprint() {
-
 	str := debugutil.PrettySprint([]string{})
 	fmt.Println(str)
 	// Output: []string{

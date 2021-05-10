@@ -21,6 +21,7 @@ func (e *RecoverError) Error() string { return fmt.Sprintf("Do panicked: %v", e.
 func Do(ctx context.Context, f func(ctx context.Context) error) (<-chan struct{}, chan error) {
 	done := make(chan struct{}, 1)
 	errc := make(chan error)
+
 	go func(done chan struct{}, error chan error, ctx context.Context) {
 		defer func() {
 			if v := recover(); v != nil {

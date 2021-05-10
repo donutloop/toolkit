@@ -20,7 +20,6 @@ func PrettySprintResponse(resp *http.Response) (string, error) {
 
 // PrettyDumpResponse is like httputil.DumpResponse but dump is pretty formatted.
 func PrettyDumpResponse(resp *http.Response, body bool) ([]byte, error) {
-
 	b, err := httputil.DumpResponse(resp, body)
 	if err != nil {
 		return nil, err
@@ -55,7 +54,6 @@ func PrettySprintRequest(resp *http.Request) (string, error) {
 
 // PrettyDumpRequest is like httputil.DumpRequest but dump is pretty formatted.
 func PrettyDumpRequest(req *http.Request, body bool) ([]byte, error) {
-
 	b, err := httputil.DumpRequest(req, body)
 	if err != nil {
 		return nil, err

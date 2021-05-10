@@ -28,7 +28,6 @@ func (m *TestMiddleware) RoundTrip(req *http.Request) (*http.Response, error) {
 }
 
 func TestInjectMiddleware(t *testing.T) {
-
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		log.Println("hit handler")
 	}
@@ -54,13 +53,13 @@ func TestInjectMiddleware(t *testing.T) {
 
 	resp, err := httpClient.Get(s.URL)
 	if err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Fatal(err)
+		t.Fatal(err)
 	}
 }
 
@@ -69,7 +68,7 @@ func TestPanicNilClient(t *testing.T) {
 		v := recover()
 		err := v.(error)
 
-		if !errors.Is(err, xhttp.ClientNilError) {
+		if !errors.Is(err, xhttp.ErrClientNil) {
 			t.Errorf("error message is bad (%v)", v)
 		}
 	}()
@@ -82,7 +81,7 @@ func TestPanicNilMiddleware(t *testing.T) {
 		v := recover()
 		err := v.(error)
 
-		if !errors.Is(err, xhttp.MiddlewareNilError)  {
+		if !errors.Is(err, xhttp.ErrMiddlewareNil) {
 			t.Errorf("error message is bad (%v)", v)
 		}
 	}()
@@ -92,11 +91,10 @@ func TestPanicNilMiddleware(t *testing.T) {
 
 func TestPanicNilMiddlewares(t *testing.T) {
 	defer func() {
-
 		v := recover()
 		err := v.(error)
 
-		if !errors.Is(err, xhttp.MiddlewaresNilError) {
+		if !errors.Is(err, xhttp.ErrMiddlewaresNil) {
 			t.Errorf("error message is bad (%v)", v)
 		}
 	}()
