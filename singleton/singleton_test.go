@@ -7,8 +7,8 @@ import (
 )
 
 func TestNewSingleton(t *testing.T) {
-
 	var counter int
+
 	stubSingleton := singleton.NewSingleton(func() (interface{}, error) {
 		counter++
 		return counter, nil
@@ -36,8 +36,8 @@ func TestNewSingleton(t *testing.T) {
 }
 
 func TestSingletonReset(t *testing.T) {
-
 	var counter int
+
 	stubSingleton := singleton.NewSingleton(func() (interface{}, error) {
 		counter++
 		return counter, nil

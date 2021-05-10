@@ -20,7 +20,6 @@ const (
 
 // PrettySprint generates a human readable representation of the value v.
 func PrettySprint(v interface{}) string {
-
 	value := reflect.ValueOf(v)
 
 	// nil

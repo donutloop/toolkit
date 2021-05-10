@@ -11,6 +11,7 @@ import (
 
 func TestLeaser_Lease(t *testing.T) {
 	var counter int32
+
 	leaser := lease.NewLeaser()
 	leaser.Lease("cleanup-cache", 1*time.Second, func() {
 		atomic.AddInt32(&counter, 1)
@@ -25,6 +26,7 @@ func TestLeaser_Lease(t *testing.T) {
 
 func TestLeaser_OverwriteLease(t *testing.T) {
 	var counter int32
+
 	leaser := lease.NewLeaser()
 	leaser.Lease("cleanup-cache", 2*time.Second, func() {
 		atomic.AddInt32(&counter, 1)
@@ -43,6 +45,7 @@ func TestLeaser_OverwriteLease(t *testing.T) {
 
 func TestLeaser_Return(t *testing.T) {
 	var counter int32
+
 	leaser := lease.NewLeaser()
 	leaser.Lease("cleanup-cache", 1*time.Second, func() {
 		atomic.AddInt32(&counter, 1)

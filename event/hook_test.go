@@ -44,6 +44,7 @@ func TestHooksPanic(t *testing.T) {
 	hooks := new(event.Hooks)
 	hooks.Add(func() { panic("check isolation of goroutine") })
 	errs := hooks.Fire()
+
 	if len(errs) != 1 {
 		t.Fatalf("error count is bad (%d)", len(errs))
 	}
@@ -57,6 +58,7 @@ func TestHooksPanic(t *testing.T) {
 func BenchmarkHooks(b *testing.B) {
 	hooks := new(event.Hooks)
 	hooks.Add(func() {})
+
 	for n := 0; n < b.N; n++ {
 		hooks.Fire()
 	}

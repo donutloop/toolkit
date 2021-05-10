@@ -60,14 +60,13 @@ func main() {
 		log.Fatalf("could not modify ast of file (%v)", err)
 	}
 
-	if err := ioutil.WriteFile(*out, modifiedFile, 0755); err != nil {
+	if err := ioutil.WriteFile(*out, modifiedFile, 0600); err != nil {
 		log.Fatalf("could not write file (%v)", err)
 	}
 }
 
 func usageFor(fs *flag.FlagSet, short string) func() {
 	return func() {
-
 		fmt.Fprintf(os.Stdout, "USAGE\n")
 		fmt.Fprintf(os.Stdout, "  %s\n", short)
 		fmt.Fprintf(os.Stdout, "\n")

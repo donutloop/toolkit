@@ -8,7 +8,6 @@ import (
 )
 
 func Example() {
-
 	s := schedule.NewFIFOScheduler()
 	defer s.Stop()
 

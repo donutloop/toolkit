@@ -17,12 +17,13 @@ func (e *RecoverError) Error() string { return fmt.Sprintf("Do panicked: %v", e.
 // Be careful about your resource consumption.
 func Run(fns ...func() error) []error {
 	wg := sync.WaitGroup{}
-	errc := make(chan error, len(fns))
 	wg.Add(len(fns))
+
+	errc := make(chan error, len(fns))
+
 	for i := range fns {
 		go func(do func() error, errc chan error) {
 			defer func() {
-
 				if v := recover(); v != nil {
 					errc <- &RecoverError{Err: v, Stack: debug.Stack()}
 				}
@@ -35,11 +36,14 @@ func Run(fns ...func() error) []error {
 			}
 		}(fns[i], errc)
 	}
+
 	wg.Wait()
 	close(errc)
+
 	errs := make([]error, 0, len(fns))
 	for err := range errc {
 		errs = append(errs, err)
 	}
+
 	return errs
 }

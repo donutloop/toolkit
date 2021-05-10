@@ -7,8 +7,7 @@ import (
 	"github.com/donutloop/toolkit/loop"
 )
 
-func ExampleLoop() {
-
+func ExampleLooper() {
 	loop.NewLooper(1*time.Second, func() error {
 		// do after one second things
 		return nil

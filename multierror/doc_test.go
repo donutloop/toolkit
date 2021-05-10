@@ -8,8 +8,8 @@ import (
 
 func Example() {
 	errs := []error{
-		connectionError,
-		marshalError,
+		ErrConnection,
+		ErrMarshal,
 	}
 	fmt.Println(multierror.New(errs...))
 	// Output: multiple errors: error connect to db failed; error marshal json

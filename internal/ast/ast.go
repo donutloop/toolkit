@@ -32,6 +32,7 @@ func ChangeType(typeName string, newType string, debugMode string) func(file *as
 				if typeName == x.Name {
 					x = &ast.Ident{Name: newType}
 				}
+
 				return x, true
 			case *ast.CallExpr:
 				for i := 0; i < len(x.Args); i++ {
@@ -42,6 +43,7 @@ func ChangeType(typeName string, newType string, debugMode string) func(file *as
 						}
 					}
 				}
+
 				return x, true
 			default:
 				if debugMode == DebugMode {
@@ -51,6 +53,7 @@ func ChangeType(typeName string, newType string, debugMode string) func(file *as
 					log.Println(fmt.Sprintf("value: %v", x))
 				}
 			}
+
 			return n, true
 		}
 
@@ -62,6 +65,7 @@ func ChangeType(typeName string, newType string, debugMode string) func(file *as
 
 func ModifyAst(dest []byte, fns ...func(*ast.File) *ast.File) ([]byte, error) {
 	destFset := token.NewFileSet()
+
 	destF, err := parser.ParseFile(destFset, "", dest, 0)
 	if err != nil {
 		return nil, err

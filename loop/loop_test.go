@@ -13,10 +13,11 @@ import (
 	"github.com/donutloop/toolkit/loop"
 )
 
-var StubErr error = errors.New("stub error")
+var ErrStub error = errors.New("stub error")
 
 func TestLoop(t *testing.T) {
 	var counter int
+
 	l := loop.NewLooper(1*time.Millisecond, func() error {
 		counter++
 		return nil
@@ -30,11 +31,11 @@ func TestLoop(t *testing.T) {
 	}
 }
 
-var GoroutineError error = fmt.Errorf("check isolation of goroutine")
+var ErrGoroutine error = fmt.Errorf("check isolation of goroutine")
 
 func TestLoopFail(t *testing.T) {
 	l := loop.NewLooper(1*time.Millisecond, func() error {
-		panic(GoroutineError)
+		panic(ErrGoroutine)
 	})
 
 	err := <-l.Error()
@@ -43,11 +44,11 @@ func TestLoopFail(t *testing.T) {
 	}
 
 	l = loop.NewLooper(1*time.Millisecond, func() error {
-		return StubErr
+		return ErrStub
 	})
 
 	err = <-l.Error()
-	if !errors.Is(err, StubErr) {
+	if !errors.Is(err, ErrStub) {
 		t.Fatal(err)
 	}
 }

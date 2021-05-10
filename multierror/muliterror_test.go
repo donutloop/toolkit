@@ -12,17 +12,19 @@ import (
 	"github.com/donutloop/toolkit/multierror"
 )
 
-var marshalError error = errors.New("error marshal json")
-var connectionError error = errors.New("error connect to db failed")
+var ErrMarshal error = errors.New("error marshal json")
+var ErrConnection error = errors.New("error connect to db failed")
 
 func TestMultiError_Error(t *testing.T) {
 	errs := []error{
 		nil,
-		connectionError,
-		marshalError,
+		ErrMarshal,
+		ErrConnection,
 	}
-	expectedValue := "multiple errors: error connect to db failed; error marshal json"
+
+	expectedValue := "multiple errors: error marshal json; error connect to db failed"
 	err := multierror.New(errs...)
+
 	if err.Error() != expectedValue {
 		t.Errorf(`unexpected error message (actual:"%v", expected: "%s")`, err, expectedValue)
 	}

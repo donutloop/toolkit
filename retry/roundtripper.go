@@ -13,9 +13,8 @@ type RoundTripper struct {
 
 // NewRoundTripper is constructing a new retry RoundTripper with given default values.
 func NewRoundTripper(next http.RoundTripper, maxInterval, initialInterval float64, tries uint, blacklistStatusCodes []int, strategy Strategy) *RoundTripper {
-
 	retrier := NewRetrier(initialInterval, maxInterval, tries, strategy)
-	
+
 	return &RoundTripper{
 		retrier:              retrier,
 		next:                 next,
@@ -54,15 +53,13 @@ func (rt *RoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
-// isStatusCode iterates over list of black listed status code that it could abort the process of retrying a request
+// isStatusCode iterates over list of black listed status code that it could abort the process of retrying a request.
 func (rt *RoundTripper) isStatusCode(statusCode int) bool {
-
 	if rt.blacklistStatusCodes == nil {
 		return false
 	}
 
 	for _, sc := range rt.blacklistStatusCodes {
-
 		if statusCode == sc {
 			return true
 		}

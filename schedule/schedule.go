@@ -41,7 +41,9 @@ func NewFIFOScheduler() *Fifo {
 	}
 	f.finishCond = sync.NewCond(&f.mu)
 	f.ctx, f.cancel = context.WithCancel(context.Background())
+
 	go f.run()
+
 	return f
 }
 
@@ -49,7 +51,7 @@ func defaultPanicHandler(stack DebugStack) {
 	log.Println(string(stack))
 }
 
-var StoppedScheduler error = errors.New("schedule: schedule to stopped scheduler")
+var ErrStoppedScheduler error = errors.New("schedule: schedule to stopped scheduler")
 
 // Schedule schedules a job that will be ran in FIFO order sequentially.
 func (f *Fifo) Schedule(j Job) error {
@@ -57,7 +59,7 @@ func (f *Fifo) Schedule(j Job) error {
 	defer f.mu.Unlock()
 
 	if f.cancel == nil {
-		return StoppedScheduler
+		return ErrStoppedScheduler
 	}
 
 	if len(f.pendings) == 0 {
@@ -67,24 +69,28 @@ func (f *Fifo) Schedule(j Job) error {
 		}
 	}
 	f.pendings = append(f.pendings, j)
+
 	return nil
 }
 
 func (f *Fifo) Pending() int {
 	f.mu.Lock()
 	defer f.mu.Unlock()
+
 	return len(f.pendings)
 }
 
 func (f *Fifo) Scheduled() int {
 	f.mu.Lock()
 	defer f.mu.Unlock()
+
 	return f.scheduled
 }
 
 func (f *Fifo) Finished() int {
 	f.finishCond.L.Lock()
 	defer f.finishCond.L.Unlock()
+
 	return f.finished
 }
 
@@ -115,12 +121,14 @@ func (f *Fifo) run() {
 
 	for {
 		var job Job
+
 		f.mu.Lock()
 		if len(f.pendings) != 0 {
 			f.scheduled++
 			job = f.pendings[0]
 		}
 		f.mu.Unlock()
+
 		if job == nil {
 			select {
 			case <-f.resume:
@@ -133,7 +141,9 @@ func (f *Fifo) run() {
 				for _, job := range pendings {
 					async.Do(job)
 				}
+
 				async.Close()
+
 				return
 			}
 		} else {
@@ -154,6 +164,7 @@ func newAsync(ctx context.Context, panicHandler func(stack DebugStack)) *async {
 		Jobs:         make(chan func(ctx context.Context)),
 	}
 	a.init()
+
 	return a
 }
 
@@ -166,7 +177,7 @@ type async struct {
 func (a *async) init() {
 	go func(jobs chan func(ctx context.Context), ctx context.Context, panicHandler func(stack DebugStack)) {
 		for job := range jobs {
-			do(job, ctx, panicHandler)
+			do(ctx, job, panicHandler)
 		}
 	}(a.Jobs, a.Ctx, a.PanicHandler)
 }
@@ -179,8 +190,7 @@ func (a *async) Close() {
 	close(a.Jobs)
 }
 
-func do(job func(ctx context.Context), ctx context.Context, panicHandler func(stack DebugStack)) {
-
+func do(ctx context.Context, job func(ctx context.Context), panicHandler func(stack DebugStack)) {
 	defer func() {
 		if err := recover(); err != nil {
 			panicHandler(DebugStack(debug.Stack()))

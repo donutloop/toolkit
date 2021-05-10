@@ -21,7 +21,6 @@ type worker struct {
 // NewWorker starts n*Workers goroutines running func on incoming
 // parameters sent on the returned channel.
 func New(nWorkers uint, fn func(gt interface{}) (interface{}, error), buffer uint) (Request, Response, <-chan error) {
-
 	request := make(chan interface{}, buffer)
 	response := make(chan interface{}, buffer)
 	errs := make(chan error, buffer)

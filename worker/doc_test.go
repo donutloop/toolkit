@@ -16,7 +16,9 @@ func Example() {
 	request, response, _ := worker.New(2, workerHandler, 10)
 
 	request <- "hello"
+
 	<-time.After(time.Millisecond * 250)
+
 	fmt.Println(<-response)
 
 	// Output: hello world

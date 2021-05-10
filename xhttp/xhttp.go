@@ -7,19 +7,18 @@ import (
 
 type Middleware func(m http.RoundTripper) http.RoundTripper
 
-var ClientNilError error = errors.New("client is nil")
-var MiddlewaresNilError error = errors.New("middlewares is nil")
-var MiddlewareNilError error = errors.New("middleware is nil")
+var ErrClientNil error = errors.New("client is nil")
+var ErrMiddlewaresNil error = errors.New("middlewares is nil")
+var ErrMiddlewareNil error = errors.New("middleware is nil")
 
 // Use is wrapping up a RoundTripper with a set of middleware.
 func Use(client *http.Client, middlewares ...Middleware) *http.Client {
-
 	if client == nil {
-		panic(ClientNilError)
+		panic(ErrClientNil)
 	}
 
 	if len(middlewares) == 0 {
-		panic(MiddlewaresNilError)
+		panic(ErrMiddlewaresNil)
 	}
 
 	if client.Transport == nil {
@@ -29,9 +28,8 @@ func Use(client *http.Client, middlewares ...Middleware) *http.Client {
 	current := client.Transport
 
 	for _, middleware := range middlewares {
-
 		if middleware == nil {
-			panic(MiddlewareNilError)
+			panic(ErrMiddlewareNil)
 		}
 
 		current = middleware(current)

@@ -27,17 +27,21 @@ func (h *Hooks) Fire() []error {
 	defer h.mu.Unlock()
 
 	errc := make(chan error, len(h.funcs))
+
 	for _, hook := range h.funcs {
 		h.wg.Add(1)
+
 		go hookWrapper(&h.wg, hook, errc)
 	}
 
 	h.wg.Wait()
 	close(errc)
+
 	errs := make([]error, 0, len(h.funcs))
 	for err := range errc {
 		errs = append(errs, err)
 	}
+
 	return errs
 }
 
@@ -46,6 +50,7 @@ func hookWrapper(wg *sync.WaitGroup, hook func(), errc chan error) {
 		if v := recover(); v != nil {
 			errc <- &RecoverError{Err: v, Stack: debug.Stack()}
 		}
+
 		wg.Done()
 	}()
 

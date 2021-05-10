@@ -7,7 +7,6 @@ import (
 )
 
 func ExampleHooks() {
-
 	hooks := new(event.Hooks)
 	hooks.Add(func() { fmt.Println("kernel request") })
 

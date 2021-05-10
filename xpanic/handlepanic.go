@@ -32,6 +32,7 @@ func BuildPanicHandler(errorf func(format string, args ...interface{}), crashOnE
 			if crashOnError {
 				signal.Reset(syscall.SIGABRT)
 				errorf("finished capturing of panic infos")
+
 				err := syscall.Kill(0, syscall.SIGABRT)
 				if err != nil {
 					errorf("syscall.Kill failed: %v", err)

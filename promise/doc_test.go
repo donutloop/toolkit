@@ -8,7 +8,6 @@ import (
 )
 
 func Example() {
-
 	done, errc := promise.Do(context.Background(), func(ctx context.Context) error {
 		fmt.Println("do things")
 		return nil
