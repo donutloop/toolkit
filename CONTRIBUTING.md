@@ -95,10 +95,6 @@ all traces of the feature or fix.
 Include an issue reference like `Closes #XXXX` or `Fixes #XXXX` in commits that
 close an issue. Including references automatically closes the issue on a merge.
 
-### How can I become a maintainer?
-
-contacting the project leader at marcel.edmund.franke@gmail.com. 
-
 ## Coding Style
 
 Unless explicitly stated, we follow all coding guidelines from the Go
@@ -128,7 +124,7 @@ The rules:
 New files that you contribute should use the standard copyright header:
 
 ```
-// Copyright 2017 The toolkit Authors. All rights reserved.
+// Copyright 2026 The toolkit Authors. All rights reserved.
 // Use of this source code is governed by a MIT License 
 // license that can be found in the LICENSE file.
 ```
